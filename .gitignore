@@ -1,0 +1,22 @@
+# Logs
+logs
+*.log
+
+# dotenv environment variables file
+.env
+.env.test
+
+# Dependencies
+
+node_modules/
+vendor/
+
+*.pyc
+
+# Misc
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+.code/
