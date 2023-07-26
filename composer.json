@@ -1,0 +1,20 @@
+{
+  "name": "miqayelsrapionyan/css-converter",
+  "description": "Converts Ucraft variantsStyles into css.",
+  "authors": [
+    {
+      "name": "Miqayel Srapionyan",
+      "email": "miqayel@ucraft.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "CssGenerator\\": "src/"
+    }
+  },
+  "require": {
+    "php": "^8.0",
+    "illuminate/support": "^8.0"
+  },
+  "minimum-stability": "dev"
+}
