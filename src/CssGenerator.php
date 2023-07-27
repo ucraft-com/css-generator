@@ -18,21 +18,25 @@ class CssGenerator
      *
      * @return string
      */
-    public function convert(array $variantsStyles, array $breakpointMapping, array $mediaMapping): string
+    public function generate(array $variantsStyles, array $breakpointMapping, array $mediaMapping): string
     {
         // Group by breakpoint id
         $groupedByBreakpoint = $this->groupByBreakpoint($variantsStyles, $breakpointMapping);
 
         // Order by based on already sorted breakpoints (low -> high)
         $orderedBreakpoints = [];
-        foreach ($breakpointMapping['breakpoints'] as $breakpointId => $resolution) {
-            $orderedBreakpoints[$breakpointId] = $groupedByBreakpoint['others'][$breakpointId];
+        if (!empty($groupedByBreakpoint['others'])) {
+            foreach ($breakpointMapping['breakpoints'] as $breakpointId => $resolution) {
+                $orderedBreakpoints[$breakpointId] = $groupedByBreakpoint['others'][$breakpointId];
+            }
         }
+
+        $defaultBreakpoint = $groupedByBreakpoint['default'] ?? [];
 
         $css = '';
 
         // Loop through all breakpoints including default
-        foreach ($groupedByBreakpoint['default'] + $orderedBreakpoints as $breakpointId => $variantsStyle) {
+        foreach ($defaultBreakpoint + $orderedBreakpoints as $breakpointId => $variantsStyle) {
             $isDefault = $breakpointMapping['defaultBreakpointId'] === $breakpointId;
             $resolution = $breakpointMapping['breakpoints'][$breakpointId] ?? null; // in case of default it is null
 
@@ -49,7 +53,7 @@ class CssGenerator
                     $selector = $this->generateSelector($widgetHash, $variantsStyleItem);
 
                     // start css block
-                    $css .= "$selector {".PHP_EOL;
+                    $css .= !empty($variantsStyleItem['styles']) ? "$selector {".PHP_EOL : '';
 
                     foreach ($variantsStyleItem['styles'] as $style) {
                         $type = $style['type'];
@@ -69,7 +73,7 @@ class CssGenerator
                     }
 
                     // close css block
-                    $css .= '}'.PHP_EOL;
+                    $css .= !empty($variantsStyleItem['styles']) ? '}'.PHP_EOL : '';
                 }
             }
 
@@ -93,7 +97,7 @@ class CssGenerator
      */
     protected function generateSelector(string $widgetHash, array $variantsStyle): string
     {
-        $selector = '.'.$widgetHash;
+        $selector = "[data-widget-hash=\"$widgetHash\"]";
 
         if (!empty($variantsStyle['widgetState'])) {
             $selector .= '.'.$variantsStyle['widgetState'];
