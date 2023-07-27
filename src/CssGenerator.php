@@ -27,7 +27,9 @@ class CssGenerator
         $orderedBreakpoints = [];
         if (!empty($groupedByBreakpoint['others'])) {
             foreach ($breakpointMapping['breakpoints'] as $breakpointId => $resolution) {
-                $orderedBreakpoints[$breakpointId] = $groupedByBreakpoint['others'][$breakpointId];
+                if (!empty($groupedByBreakpoint['others'][$breakpointId])) {
+                    $orderedBreakpoints[$breakpointId] = $groupedByBreakpoint['others'][$breakpointId];
+                }
             }
         }
 
