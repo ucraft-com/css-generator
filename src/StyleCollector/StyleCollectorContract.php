@@ -6,5 +6,8 @@ namespace CssGenerator\StyleCollector;
 
 interface StyleCollectorContract
 {
+    /**
+     * @return \CssGenerator\StyleCollector\Stylesheet
+     */
     public function getStylesheet(): Stylesheet;
 }

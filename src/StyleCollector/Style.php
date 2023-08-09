@@ -6,63 +6,89 @@ namespace CssGenerator\StyleCollector;
 
 use CssGenerator\StrategyFactory;
 
+use function rtrim;
+
 class Style
 {
+    /**
+     * @var string Css selector
+     */
     protected string $selector;
 
-    protected array $rules = [];
+    /**
+     * @var array Styles that must be converted to string
+     */
+    protected array $styles = [];
 
+    /**
+     * @var array Media files mapping: [1 => 'path/to/media.jpg']
+     */
     protected array $mediaMapping = [];
 
+    /**
+     * @param array $mediaMapping
+     *
+     * @return void
+     */
     public function setMediaMapping(array $mediaMapping): void
     {
         $this->mediaMapping = $mediaMapping;
     }
 
+    /**
+     * @param string $selector
+     *
+     * @return void
+     */
     public function setSelector(string $selector): void
     {
         $this->selector = $selector;
     }
 
-    public function setRules(array $rules): void
+    /**
+     * @param array $styles
+     *
+     * @return void
+     */
+    public function setStyles(array $styles): void
     {
-        $this->rules = $rules;
+        $this->styles = $styles;
     }
 
-    public function getRules(): array
-    {
-        return $this->rules;
-    }
-
+    /**
+     * Generate css blocks, based on styles.
+     *
+     * @return string
+     */
     public function __toString(): string
     {
         $css = '';
-        $variantsStyleItem = $this->rules;
-            // transform property name
-            $transformCss = 'transform: ';
 
-            // start css block
-            $css .= !empty($variantsStyleItem['styles']) ? "{$this->selector} {".PHP_EOL : '';
+        // 'transform' property name
+        $transformCss = 'transform: ';
 
-            foreach ($variantsStyleItem['styles'] as $style) {
-                $type = $style['type'];
-                $value = $style['value'];
+        // start css block
+        $css .= !empty($this->styles) ? "{$this->selector} {".PHP_EOL : '';
 
-                // transform case
-                if (isset($style['group']) && $style['group'] === 'transform') {
-                    $transformCss .= "$type($value) "; // join transform styles separated by spaces
-                    continue;
-                }
+        foreach ($this->styles as $style) {
+            $type = $style['type'];
+            $value = $style['value'];
 
-                $css .= StrategyFactory::create($style['type'])->convert($style, $this->mediaMapping);
+            // 'transform' case
+            if (isset($style['group']) && $style['group'] === 'transform') {
+                $transformCss .= "$type($value) "; // join transform styles separated by spaces
+                continue;
             }
 
-            if ($transformCss !== 'transform: ') {
-                $css .= rtrim($transformCss).';'.PHP_EOL; // add collected transform property, value
-            }
+            $css .= StrategyFactory::create($style['type'])->convert($style, $this->mediaMapping);
+        }
 
-            // close css block
-            $css .= !empty($variantsStyleItem['styles']) ? '}'.PHP_EOL : '';
+        if ($transformCss !== 'transform: ') {
+            $css .= rtrim($transformCss).';'.PHP_EOL; // add collected transform property, value
+        }
+
+        // close css block
+        $css .= !empty($this->styles) ? '}'.PHP_EOL : '';
 
         return $css;
     }

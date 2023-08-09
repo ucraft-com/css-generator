@@ -6,6 +6,9 @@ namespace CssGenerator\StyleCollector;
 
 use function array_unshift;
 
+/**
+ * StyleCollector collects all necessary data for generating css.
+ */
 class StyleCollector implements StyleCollectorContract
 {
     /**
@@ -18,8 +21,6 @@ class StyleCollector implements StyleCollectorContract
         $this->data = [
             'breakpoints'    => [],
             'media'          => [],
-            'fonts'          => [],
-            'colors'          => [],
             'variantsStyles' => [],
             'stylesheet'     => new Stylesheet(),
         ];
@@ -57,7 +58,6 @@ class StyleCollector implements StyleCollectorContract
         // example: [320, 769, 1281, 1441, 1921] -> [1281, 769, 320, 1441, 1921] (1281 is default)
         foreach ($breakpoints as $breakpoint) {
             $newBreakpoint = new Breakpoint();
-            $newBreakpoint->setWidth($breakpoint['width']);
             $newBreakpoint->setIsDefault($breakpoint['default']);
             $newBreakpoint->setId($breakpoint['id']);
 
@@ -84,6 +84,9 @@ class StyleCollector implements StyleCollectorContract
         return $this;
     }
 
+    /**
+     * @return \CssGenerator\StyleCollector\Stylesheet
+     */
     public function getStylesheet(): Stylesheet
     {
         return $this->data['stylesheet'];
@@ -101,14 +104,13 @@ class StyleCollector implements StyleCollectorContract
         return $this;
     }
 
+    /**
+     * Convert data to Style data structures.
+     *
+     * @return void
+     */
     public function build(): void
     {
-        $colors = [
-                            ":root[data-theme='light']" => [
-                                '--color-1' => 'rgb(0, 0, 0)'
-                            ]
-        ];
-
         /**
          * @var string $widgetId
          * @var array  $variantsStyle
@@ -124,14 +126,10 @@ class StyleCollector implements StyleCollectorContract
 
                 $style = new Style();
                 $style->setSelector($selector);
-                $style->setRules($item);
-                $style->setMediaMapping($this->getMedia());
+                $style->setStyles($item['styles']);
+                $style->setMediaMapping($this->data['media']);
                 $breakpoint->addStyle($widgetId, $style);
             }
-        }
-        
-        foreach ($colors as $color){
-            
         }
 
         /** @var Stylesheet $stylesheet */
@@ -139,11 +137,14 @@ class StyleCollector implements StyleCollectorContract
         $stylesheet->setBreakpoints($this->data['breakpoints']);
     }
 
-    protected function getMedia(): array
-    {
-        return $this->data['media'];
-    }
-
+    /**
+     * Generate selector for css block.
+     *
+     * @param string $widgetId
+     * @param array  $variantsStyle
+     *
+     * @return string
+     */
     protected function generateSelector(string $widgetId, array $variantsStyle): string
     {
         if (str_contains($widgetId, 'uiElement')) {
