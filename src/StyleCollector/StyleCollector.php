@@ -26,13 +26,19 @@ class StyleCollector implements StyleCollectorContract
     }
 
     /**
-     * @param array $media
+     * @param array    $media
+     * @param callable $pathResolver
      *
      * @return $this
      */
-    public function assignMedia(array $media): StyleCollector
+    public function assignMedia(array $media, callable $pathResolver): StyleCollector
     {
-        $this->data['media'] = $media;
+        $formattedMedia = [];
+        foreach ($media as $medium) {
+            $formattedMedia[$medium['id']] = $pathResolver($medium['filename']);
+        }
+
+        $this->data['media'] = $formattedMedia;
 
         return $this;
     }
