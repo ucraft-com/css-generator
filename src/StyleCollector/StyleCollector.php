@@ -154,7 +154,7 @@ class StyleCollector implements StyleCollectorContract
     {
         if (str_contains($widgetId, 'uiElement')) {
             $selector = ".$widgetId";
-        } elseif (str_contains($widgetId, '[class~="page"]')) {
+        } elseif ($widgetId === '[class~="page"]') {
             $selector = $widgetId;
         } else {
             $selector = "[data-widget-hash=\"$widgetId\"]";
