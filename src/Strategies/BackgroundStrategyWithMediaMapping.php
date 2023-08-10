@@ -103,12 +103,13 @@ class BackgroundStrategyWithMediaMapping implements StrategyInterfaceWithMediaMa
 
                 if ($color) {
                     $gradientCss .= $itemColorId ? " var(--color-$itemColorId, $color)" : ' '.$color;
-                    $gradientCss .= ' '.$position * 100 .'%';
+                    $gradientCss .= ' '.$position * 100 .'%,';
                 } elseif ($itemColorId) {
                     $gradientCss .= " var(--color-$itemColorId) ".$position * 100 .'%';
                 }
             }
 
+            $gradientCss = rtrim(',', $gradientCss);
             $colorStr = "$gradient($degreeValue$gradientCss)";
 
             return $colorId

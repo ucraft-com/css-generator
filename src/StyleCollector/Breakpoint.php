@@ -100,10 +100,12 @@ class Breakpoint
      */
     public function __toString()
     {
+        $css = '';
+        /** @var array $style */
         foreach ($this->styles as $style) {
-            $css = implode($style);
+            $css .= implode($style);
         }
 
-        return $css ?? '';
+        return $css;
     }
 }

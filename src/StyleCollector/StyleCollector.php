@@ -119,15 +119,20 @@ class StyleCollector implements StyleCollectorContract
             $selector = $this->generateSelector($widgetId, $variantsStyle);
 
             foreach ($variantsStyle as $item) {
-                $itemBreakpointId = (int)$item['breakpointId'];
-
-                /** @var Breakpoint $breakpoint */
-                $breakpoint = $this->data['breakpoints'][$itemBreakpointId];
+                // todo tmp solution, until '[DEFAULT_BREAKPOINT_ID]' will be removed
+                if ($item['breakpointId'] === '[DEFAULT_BREAKPOINT_ID]') {
+                    $itemBreakpointId = 3;
+                } else {
+                    $itemBreakpointId = (int)$item['breakpointId'];
+                }
 
                 $style = new Style();
                 $style->setSelector($selector);
                 $style->setStyles($item['styles']);
                 $style->setMediaMapping($this->data['media']);
+
+                /** @var Breakpoint $breakpoint */
+                $breakpoint = $this->data['breakpoints'][$itemBreakpointId];
                 $breakpoint->addStyle($widgetId, $style);
             }
         }

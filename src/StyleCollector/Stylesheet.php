@@ -33,7 +33,7 @@ class Stylesheet
     {
         $style = '';
         foreach ($this->breakpoints as $breakpoint) {
-            if (!$breakpoint->isDefault() && !empty((string)$breakpoint)) {
+            if (!$breakpoint->isDefault()) {
                 $style .= $breakpoint->getMediaQuery(); // open @media
                 $style .= $breakpoint;
                 $style .= '}'.PHP_EOL; // close @media
