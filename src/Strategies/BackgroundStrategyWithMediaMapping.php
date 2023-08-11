@@ -9,6 +9,16 @@ use function join;
 class BackgroundStrategyWithMediaMapping implements StrategyInterfaceWithMediaMapping
 {
     /**
+     * @var array|string[]
+     */
+    protected array $defaultBackgroundProps = [
+        'backgroundSize'       => 'auto',
+        'backgroundPosition'   => '0px 0px',
+        'backgroundRepeat'     => 'no-repeat',
+        'backgroundAttachment' => 'scroll',
+    ];
+
+    /**
      * Converts given variantsStyles to relative css string.
      *
      * @param array $variantStyle
@@ -18,13 +28,6 @@ class BackgroundStrategyWithMediaMapping implements StrategyInterfaceWithMediaMa
      */
     public function convert(array $variantStyle, array $mediaMapping = []): string
     {
-        $backgroundProps = [
-            'backgroundSize'       => 'auto',
-            'backgroundPosition'   => '0px 0px',
-            'backgroundRepeat'     => 'no-repeat',
-            'backgroundAttachment' => 'scroll',
-        ];
-
         $imageProperty = 'background';
         $sizeProperty = 'background-size';
         $positionProperty = 'background-position';
@@ -38,15 +41,18 @@ class BackgroundStrategyWithMediaMapping implements StrategyInterfaceWithMediaMa
         $backgroundAttachment = [];
 
         foreach ($variantStyle['value'] as $variantStyleValue) {
+            if (!$variantStyleValue['active']) {
+                continue;
+            }
             $color = $this->parseValue($variantStyleValue['type'], $variantStyleValue['value'], $mediaMapping);
 
-            $data = $variantStyleValue['type'] === 'image' ? $variantStyleValue['value']['data'] : $backgroundProps;
+            $data = $variantStyleValue['type'] === 'image' ? $variantStyleValue['value']['data'] : $this->defaultBackgroundProps;
             $backgroundSizes[] = $data['backgroundSize'];
             $backgroundPositions[] = $data['backgroundPosition'];
             $backgroundRepeats[] = $data['backgroundRepeat'];
             $backgroundAttachment[] = $data['backgroundAttachment'];
 
-            $backgroundValue = $variantStyleValue['type'] === 'solid' && $variantStyleValue['active'] ? "linear-gradient($color, $color)" : $color;
+            $backgroundValue = $variantStyleValue['type'] === 'solid' ? "linear-gradient($color, $color)" : $color;
             $backgroundImages[] = $backgroundValue;
         }
 
@@ -57,11 +63,11 @@ class BackgroundStrategyWithMediaMapping implements StrategyInterfaceWithMediaMa
         $backgroundAttachment = join(', ', $backgroundAttachment);
 
         return join(PHP_EOL, [
-            "$imageProperty: $backgroundImages;",
-            "$sizeProperty: $backgroundSizes;",
-            "$positionProperty: $backgroundPositions;",
-            "$repeatProperty: $backgroundRepeats;",
-            "$attachmentProperty: $backgroundAttachment;"
+            $backgroundImages ? "$imageProperty: $backgroundImages;" : '',
+            $backgroundSizes ? "$sizeProperty: $backgroundSizes;" : '',
+            $backgroundPositions ? "$positionProperty: $backgroundPositions;" : '',
+            $backgroundRepeats ? "$repeatProperty: $backgroundRepeats;" : '',
+            $backgroundAttachment ? "$attachmentProperty: $backgroundAttachment;" : ''
         ]);
     }
 

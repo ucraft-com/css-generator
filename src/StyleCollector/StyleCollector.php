@@ -112,13 +112,12 @@ class StyleCollector implements StyleCollectorContract
     public function build(): void
     {
         /**
-         * @var string $widgetId
+         * @var string $selector
          * @var array  $variantsStyle
          */
-        foreach ($this->data['variantsStyles'] as $widgetId => $variantsStyle) {
-            $selector = $this->generateSelector($widgetId, $variantsStyle);
-
+        foreach ($this->data['variantsStyles'] as $selector => $variantsStyle) {
             foreach ($variantsStyle as $item) {
+                $selector = $this->generateSelector($selector, $item);
                 // todo tmp solution, until '[DEFAULT_BREAKPOINT_ID]' will be removed
                 if ($item['breakpointId'] === '[DEFAULT_BREAKPOINT_ID]') {
                     $itemBreakpointId = 3;
@@ -133,7 +132,7 @@ class StyleCollector implements StyleCollectorContract
 
                 /** @var Breakpoint $breakpoint */
                 $breakpoint = $this->data['breakpoints'][$itemBreakpointId];
-                $breakpoint->addStyle($widgetId, $style);
+                $breakpoint->addStyle($selector, $style);
             }
         }
 
@@ -145,21 +144,13 @@ class StyleCollector implements StyleCollectorContract
     /**
      * Generate selector for css block.
      *
-     * @param string $widgetId
+     * @param string $selector
      * @param array  $variantsStyle
      *
      * @return string
      */
-    protected function generateSelector(string $widgetId, array $variantsStyle): string
+    protected function generateSelector(string $selector, array $variantsStyle): string
     {
-        if (str_contains($widgetId, 'uiElement')) {
-            $selector = ".$widgetId";
-        } elseif ($widgetId === '[class~="page"]') {
-            $selector = $widgetId;
-        } else {
-            $selector = "[data-widget-hash=\"$widgetId\"]";
-        }
-
         if (!empty($variantsStyle['widgetState'])) {
             $selector .= '.'.$variantsStyle['widgetState'];
         }

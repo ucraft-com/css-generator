@@ -17,10 +17,10 @@ class StaticStyleDecorator extends AbstractStyleDecorator
     {
         $css = parent::applyStyle($styles);
 
-        foreach($styles as $style){
+        foreach ($styles as $style) {
             $css .= $style['selector'].' {'.PHP_EOL;
             foreach ($style['styles'] as $property => $value) {
-                $css .= "$property: $value;" . PHP_EOL;
+                $css .= "$property: $value;".PHP_EOL;
             }
             $css .= '}'.PHP_EOL;
         }
