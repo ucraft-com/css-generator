@@ -6,12 +6,5 @@ namespace CssGenerator\Decorators;
 
 interface StyleDecoratorInterface
 {
-    /**
-     * Apply styles data, and generate css string.
-     *
-     * @param array $styles
-     *
-     * @return string
-     */
-    public function applyStyle(array $styles): string;
+    public function __toString(): string;
 }

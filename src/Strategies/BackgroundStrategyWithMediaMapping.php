@@ -63,7 +63,7 @@ class BackgroundStrategyWithMediaMapping implements StrategyInterfaceWithMediaMa
         $backgroundAttachment = join(', ', $backgroundAttachment);
 
         return join(PHP_EOL, [
-            $backgroundImages ? "$imageProperty: $backgroundImages;" : '',
+            $backgroundImages ? "$imageProperty: $backgroundImages;" : "$imageProperty: none;",
             $backgroundSizes ? "$sizeProperty: $backgroundSizes;" : '',
             $backgroundPositions ? "$positionProperty: $backgroundPositions;" : '',
             $backgroundRepeats ? "$repeatProperty: $backgroundRepeats;" : '',

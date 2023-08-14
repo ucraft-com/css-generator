@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace CssGenerator\StyleCollector;
+namespace CssGenerator\Decorators;
 
 use CssGenerator\StrategyFactory;
 
 use function rtrim;
 
-class Style
+class StyleDecorator extends AbstractStyleDecorator
 {
     /**
      * @var string Css selector

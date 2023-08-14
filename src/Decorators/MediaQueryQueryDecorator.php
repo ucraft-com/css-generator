@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace CssGenerator\Decorators;
 
-class MediaQueryQueryDecorator extends AbstractStyleDecorator implements MediaQueryDecoratorInterface
+class MediaQueryQueryDecorator extends AbstractStyleDecorator
 {
+    protected string $mediaQuery = '';
+
     /**
      * Apply styles data, and generate css string.
      *
-     * @param array  $styles
-     * @param string $mediaQuery
-     *
      * @return string
      */
-    public function applyStyle(array $styles, string $mediaQuery = ''): string
+    public function __toString(): string
     {
         $css = parent::applyStyle($styles);
         $eol = PHP_EOL;

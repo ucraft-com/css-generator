@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-namespace CssGenerator\StyleCollector;
+namespace CssGenerator\Decorators;
+
+use function implode;
 
 /**
  * Stylesheet contains breakpoints, and generates css.
  */
-class Stylesheet
+class Stylesheet extends AbstractStyleDecorator
 {
     /**
-     * @var array<Breakpoint>
+     * @var array<\CssGenerator\Decorators\BreakpointDecorator>
      */
     protected array $breakpoints = [];
 
@@ -31,17 +33,6 @@ class Stylesheet
      */
     public function __toString(): string
     {
-        $style = '';
-        foreach ($this->breakpoints as $breakpoint) {
-            if (!$breakpoint->isDefault()) {
-                $style .= $breakpoint->getMediaQuery(); // open @media
-                $style .= $breakpoint;
-                $style .= '}'.PHP_EOL; // close @media
-            } else {
-                $style .= $breakpoint;
-            }
-        }
-
-        return $style;
+        return implode('', $this->breakpoints);
     }
 }

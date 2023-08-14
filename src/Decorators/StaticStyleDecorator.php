@@ -6,24 +6,32 @@ namespace CssGenerator\Decorators;
 
 class StaticStyleDecorator extends AbstractStyleDecorator
 {
+    protected array $styles = [];
+
+    protected string $selector;
+
+    public function setStyles(array $styles): void
+    {
+        $this->styles = $styles;
+    }
+
+    public function setSelector(string $selector): void
+    {
+        $this->selector = $selector;
+    }
+
     /**
      * Apply styles data, and generate css string.
      *
-     * @param array $styles
-     *
      * @return string
      */
-    public function applyStyle(array $styles): string
+    public function __toString(): string
     {
-        $css = parent::applyStyle($styles);
-
-        foreach ($styles as $style) {
-            $css .= $style['selector'].' {'.PHP_EOL;
-            foreach ($style['styles'] as $property => $value) {
-                $css .= "$property: $value;".PHP_EOL;
-            }
-            $css .= '}'.PHP_EOL;
+        $css = "{$this->selector} {".PHP_EOL;
+        foreach ($this->styles as $property => $value) {
+            $css .= "$property: $value;".PHP_EOL;
         }
+        $css .= '}'.PHP_EOL;
 
         return $css;
     }

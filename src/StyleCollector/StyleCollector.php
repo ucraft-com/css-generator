@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace CssGenerator\StyleCollector;
 
+use CssGenerator\Decorators\BreakpointDecorator;
+use CssGenerator\Decorators\StaticStyleDecorator;
+use CssGenerator\Decorators\StaticStylesheet;
+use CssGenerator\Decorators\StyleDecorator;
+use CssGenerator\Decorators\StyleDecoratorInterface;
+use CssGenerator\Decorators\Stylesheet;
+
 use function array_unshift;
 
 /**
@@ -22,7 +29,6 @@ class StyleCollector implements StyleCollectorContract
             'breakpoints'    => [],
             'media'          => [],
             'variantsStyles' => [],
-            'stylesheet'     => new Stylesheet(),
         ];
     }
 
@@ -57,11 +63,11 @@ class StyleCollector implements StyleCollectorContract
         // Sort breakpoints, if breakpoint is less than default, must be reverse sorted
         // example: [320, 769, 1281, 1441, 1921] -> [1281, 769, 320, 1441, 1921] (1281 is default)
         foreach ($breakpoints as $breakpoint) {
-            $newBreakpoint = new Breakpoint();
+            $newBreakpoint = new BreakpointDecorator();
             $newBreakpoint->setIsDefault($breakpoint['default']);
             $newBreakpoint->setId($breakpoint['id']);
 
-            if (!$breakpoint['default']) {
+            if (!$newBreakpoint->isDefault()) {
                 if ($defaultBreakpointWidth === 0 || $defaultBreakpointWidth > $breakpoint['width']) {
                     $newBreakpoint->setMediaQuery("@media (max-width: {$breakpoint['width']}px) {".PHP_EOL);
                     array_unshift($sortedBreakpoints, $newBreakpoint);
@@ -85,9 +91,9 @@ class StyleCollector implements StyleCollectorContract
     }
 
     /**
-     * @return \CssGenerator\StyleCollector\Stylesheet
+     * @return \CssGenerator\Decorators\StyleDecoratorInterface
      */
-    public function getStylesheet(): Stylesheet
+    public function getStylesheet(): StyleDecoratorInterface
     {
         return $this->data['stylesheet'];
     }
@@ -111,6 +117,12 @@ class StyleCollector implements StyleCollectorContract
      */
     public function build(): void
     {
+        // For simple or general styles we dont have breakpoints
+        if (empty($this->data['breakpoints'])) {
+            $this->buildWithoutBreakpoint();
+            return;
+        }
+
         /**
          * @var string $selector
          * @var array  $variantsStyle
@@ -125,20 +137,45 @@ class StyleCollector implements StyleCollectorContract
                     $itemBreakpointId = (int)$item['breakpointId'];
                 }
 
-                $style = new Style();
+                $style = new StyleDecorator();
                 $style->setSelector($selector);
                 $style->setStyles($item['styles']);
                 $style->setMediaMapping($this->data['media']);
 
-                /** @var Breakpoint $breakpoint */
+                /** @var BreakpointDecorator $breakpoint */
                 $breakpoint = $this->data['breakpoints'][$itemBreakpointId];
                 $breakpoint->addStyle($selector, $style);
             }
         }
 
-        /** @var Stylesheet $stylesheet */
-        $stylesheet = $this->data['stylesheet'];
+        $stylesheet = new Stylesheet();
         $stylesheet->setBreakpoints($this->data['breakpoints']);
+        $this->data['stylesheet'] = $stylesheet;
+    }
+
+    /**
+     * Convert data to Style data structures, without breakpoints.
+     *
+     * @return void
+     */
+    protected function buildWithoutBreakpoint(): void
+    {
+        $styles = [];
+
+        /**
+         * @var string $selector
+         * @var array  $variantsStyle
+         */
+        foreach ($this->data['variantsStyles'] as $variantsStyle) {
+            $style = new StaticStyleDecorator();
+            $style->setSelector($variantsStyle['selector']);
+            $style->setStyles($variantsStyle['styles']);
+            $styles[] = $style;
+        }
+
+        $stylesheet = new StaticStylesheet();
+        $stylesheet->setStyles($styles);
+        $this->data['stylesheet'] = $stylesheet;
     }
 
     /**

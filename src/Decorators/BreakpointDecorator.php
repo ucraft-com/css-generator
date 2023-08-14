@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace CssGenerator\StyleCollector;
+namespace CssGenerator\Decorators;
 
 use function implode;
 
-class Breakpoint
+class BreakpointDecorator extends AbstractStyleDecorator
 {
     /**
-     * @var array<Style>
+     * @var array|StyleDecorator[]
      */
     protected array $styles = [];
 
@@ -83,12 +83,12 @@ class Breakpoint
     }
 
     /**
-     * @param string                             $widgetId
-     * @param \CssGenerator\StyleCollector\Style $style
+     * @param string                                  $widgetId
+     * @param \CssGenerator\Decorators\StyleDecorator $style
      *
      * @return void
      */
-    public function addStyle(string $widgetId, Style $style): void
+    public function addStyle(string $widgetId, StyleDecorator $style): void
     {
         $this->styles[$widgetId][] = $style;
     }
@@ -98,12 +98,19 @@ class Breakpoint
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         $css = '';
-        /** @var array $style */
-        foreach ($this->styles as $style) {
-            $css .= implode($style);
+        if (!$this->isDefault) {
+            $css .= $this->getMediaQuery();
+        }
+
+        foreach ($this->styles as $styles){
+            $css .= implode('', $styles);
+        }
+
+        if (!$this->isDefault) {
+            $css .= '}';
         }
 
         return $css;
