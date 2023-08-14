@@ -63,14 +63,19 @@ class StyleCollector implements StyleCollectorContract
 
         // Sort breakpoints, if breakpoint is less than default, must be reverse sorted
         // example: [320, 769, 1281, 1441, 1921] -> [1281, 769, 320, 1441, 1921] (1281 is default)
-        foreach ($breakpoints as $breakpoint) {
+        foreach ($breakpoints as $breakpointIndex => $breakpoint) {
             $newBreakpoint = new BreakpointDecorator();
             $newBreakpoint->setIsDefault($breakpoint['default']);
             $newBreakpoint->setId($breakpoint['id']);
 
             if (!$newBreakpoint->isDefault()) {
                 if ($defaultBreakpointWidth === 0 || $defaultBreakpointWidth > $breakpoint['width']) {
-                    $newBreakpoint->setMediaQuery("@media (max-width: {$breakpoint['width']}px) {".PHP_EOL);
+                    $width = $breakpoint['width'];
+
+                    if(isset($breakpoints[$breakpointIndex + 1])){
+                        $width = $breakpoints[$breakpointIndex + 1]['width'] - 1;
+                    }
+                    $newBreakpoint->setMediaQuery("@media (max-width: {$width}px) {".PHP_EOL);
                     array_unshift($sortedBreakpoints, $newBreakpoint);
                 } else {
                     $newBreakpoint->setMediaQuery("@media (min-width: {$breakpoint['width']}px) {".PHP_EOL);
@@ -142,7 +147,7 @@ class StyleCollector implements StyleCollectorContract
          */
         foreach ($this->data['variantsStyles'] as $selector => $variantsStyle) {
             foreach ($variantsStyle as $item) {
-                $selector = $this->generateSelector($selector, $item);
+                $generatedSelector = $this->generateSelector($selector, $item);
                 // todo tmp solution, until '[DEFAULT_BREAKPOINT_ID]' will be removed
                 if ($item['breakpointId'] === '[DEFAULT_BREAKPOINT_ID]') {
                     $itemBreakpointId = 3;
@@ -151,13 +156,13 @@ class StyleCollector implements StyleCollectorContract
                 }
 
                 $style = new StyleDecorator();
-                $style->setSelector($selector);
+                $style->setSelector($generatedSelector);
                 $style->setStyles($item['styles']);
                 $style->setMediaMapping($this->data['media']);
 
                 /** @var BreakpointDecorator $breakpoint */
                 $breakpoint = $this->data['breakpoints'][$itemBreakpointId];
-                $breakpoint->addStyle($selector, $style);
+                $breakpoint->addStyle($generatedSelector, $style);
             }
         }
 
