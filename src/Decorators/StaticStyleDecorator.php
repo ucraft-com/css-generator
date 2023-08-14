@@ -6,15 +6,31 @@ namespace CssGenerator\Decorators;
 
 class StaticStyleDecorator extends AbstractStyleDecorator
 {
+    /**
+     * @var array
+     */
     protected array $styles = [];
 
+    /**
+     * @var string
+     */
     protected string $selector;
 
+    /**
+     * @param array $styles
+     *
+     * @return void
+     */
     public function setStyles(array $styles): void
     {
         $this->styles = $styles;
     }
 
+    /**
+     * @param string $selector
+     *
+     * @return void
+     */
     public function setSelector(string $selector): void
     {
         $this->selector = $selector;

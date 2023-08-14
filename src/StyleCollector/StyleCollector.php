@@ -26,9 +26,10 @@ class StyleCollector implements StyleCollectorContract
     public function __construct()
     {
         $this->data = [
-            'breakpoints'    => [],
-            'media'          => [],
-            'variantsStyles' => [],
+            'breakpoints'     => [],
+            'media'           => [],
+            'variantsStyles'  => [],
+            'colorMediaQuery' => '',
         ];
     }
 
@@ -111,6 +112,18 @@ class StyleCollector implements StyleCollectorContract
     }
 
     /**
+     * @param string $colorMediaQuery
+     *
+     * @return $this
+     */
+    public function assignColorMediaQuery(string $colorMediaQuery): StyleCollector
+    {
+        $this->data['colorMediaQuery'] = $colorMediaQuery;
+
+        return $this;
+    }
+
+    /**
      * Convert data to Style data structures.
      *
      * @return void
@@ -175,6 +188,7 @@ class StyleCollector implements StyleCollectorContract
 
         $stylesheet = new StaticStylesheet();
         $stylesheet->setStyles($styles);
+        $stylesheet->setColorMedaQuery($this->data['colorMediaQuery']);
         $this->data['stylesheet'] = $stylesheet;
     }
 

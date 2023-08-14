@@ -102,15 +102,15 @@ class BreakpointDecorator extends AbstractStyleDecorator
     {
         $css = '';
         if (!$this->isDefault) {
-            $css .= $this->getMediaQuery();
+            $css .= $this->getMediaQuery().PHP_EOL;
         }
 
         foreach ($this->styles as $styles){
-            $css .= implode('', $styles);
+            $css .= implode('', $styles).PHP_EOL;
         }
 
         if (!$this->isDefault) {
-            $css .= '}';
+            $css .= '}'.PHP_EOL;
         }
 
         return $css;

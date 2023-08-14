@@ -11,6 +11,8 @@ use function implode;
  */
 class StaticStylesheet extends AbstractStyleDecorator
 {
+    protected string $colorMediaQuery;
+
     /**
      * @var array<\CssGenerator\Decorators\StaticStyleDecorator>
      */
@@ -27,12 +29,34 @@ class StaticStylesheet extends AbstractStyleDecorator
     }
 
     /**
+     * @param string $colorMediaQuery
+     *
+     * @return void
+     */
+    public function setColorMedaQuery(string $colorMediaQuery): void
+    {
+        $this->colorMediaQuery = $colorMediaQuery;
+    }
+
+    /**
      * Generate final css, for simple styles.
      *
      * @return string
      */
     public function __toString(): string
     {
-        return implode('', $this->styles);
+        $css = '';
+
+        if (!empty($this->colorMediaQuery)) {
+            $css .= $this->colorMediaQuery.PHP_EOL;
+        }
+
+        $css .= implode('', $this->styles).PHP_EOL;
+
+        if (!empty($this->colorMediaQuery)) {
+            $css .= '}'.PHP_EOL;
+        }
+
+        return $css;
     }
 }
