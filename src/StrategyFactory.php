@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CssGenerator;
 
-use CssGenerator\Strategies\BackgroundStrategyWithMediaMapping;
+use CssGenerator\Strategies\BackgroundStrategy;
 use CssGenerator\Strategies\DefaultStrategy;
 use CssGenerator\Strategies\FilterStrategy;
 use CssGenerator\Strategies\StrategyInterface;
@@ -23,7 +23,7 @@ class StrategyFactory
     {
         return match ($type) {
             "filter" => new FilterStrategy(),
-            "background" => new BackgroundStrategyWithMediaMapping(),
+            "background" => new BackgroundStrategy(),
             default => new DefaultStrategy(),
         };
     }

@@ -68,7 +68,7 @@ class StyleDecorator extends AbstractStyleDecorator
         $transformCss = 'transform: ';
 
         // start css block
-        $css .= !empty($this->styles) ? "{$this->selector} {".PHP_EOL : '';
+        $css .= !empty($this->styles) ? "{$this->selector} {" : '';
 
         foreach ($this->styles as $style) {
             $type = $style['type'];
@@ -84,11 +84,11 @@ class StyleDecorator extends AbstractStyleDecorator
         }
 
         if ($transformCss !== 'transform: ') {
-            $css .= rtrim($transformCss).';'.PHP_EOL; // add collected transform property, value
+            $css .= rtrim($transformCss).';'; // add collected transform property, value
         }
 
         // close css block
-        $css .= !empty($this->styles) ? '}'.PHP_EOL : '';
+        $css .= !empty($this->styles) ? '}' : '';
 
         return $css;
     }

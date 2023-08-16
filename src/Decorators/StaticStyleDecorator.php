@@ -43,11 +43,11 @@ class StaticStyleDecorator extends AbstractStyleDecorator
      */
     public function __toString(): string
     {
-        $css = "{$this->selector} {".PHP_EOL;
+        $css = "{$this->selector} {";
         foreach ($this->styles as $property => $value) {
-            $css .= "$property: $value;".PHP_EOL;
+            $css .= "$property: $value;";
         }
-        $css .= '}'.PHP_EOL;
+        $css .= '}';
 
         return $css;
     }

@@ -6,7 +6,7 @@ namespace CssGenerator\Strategies;
 
 use function join;
 
-class BackgroundStrategyWithMediaMapping implements StrategyInterfaceWithMediaMapping
+class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
 {
     /**
      * @var array|string[]
@@ -28,12 +28,6 @@ class BackgroundStrategyWithMediaMapping implements StrategyInterfaceWithMediaMa
      */
     public function convert(array $variantStyle, array $mediaMapping = []): string
     {
-        $imageProperty = 'background';
-        $sizeProperty = 'background-size';
-        $positionProperty = 'background-position';
-        $repeatProperty = 'background-repeat';
-        $attachmentProperty = 'background-attachment';
-
         $backgroundImages = [];
         $backgroundSizes = [];
         $backgroundPositions = [];
@@ -44,6 +38,7 @@ class BackgroundStrategyWithMediaMapping implements StrategyInterfaceWithMediaMa
             if (!$variantStyleValue['active']) {
                 continue;
             }
+
             $color = $this->parseValue($variantStyleValue['type'], $variantStyleValue['value'], $mediaMapping);
 
             $data = $variantStyleValue['type'] === 'image' ? $variantStyleValue['value']['data'] : $this->defaultBackgroundProps;
@@ -62,12 +57,12 @@ class BackgroundStrategyWithMediaMapping implements StrategyInterfaceWithMediaMa
         $backgroundRepeats = join(', ', $backgroundRepeats);
         $backgroundAttachment = join(', ', $backgroundAttachment);
 
-        return join(PHP_EOL, [
-            $backgroundImages ? "$imageProperty: $backgroundImages;" : "$imageProperty: none;",
-            $backgroundSizes ? "$sizeProperty: $backgroundSizes;" : '',
-            $backgroundPositions ? "$positionProperty: $backgroundPositions;" : '',
-            $backgroundRepeats ? "$repeatProperty: $backgroundRepeats;" : '',
-            $backgroundAttachment ? "$attachmentProperty: $backgroundAttachment;" : ''
+        return join('', [
+            $backgroundImages ? "background: $backgroundImages;" : "background: none;",
+            $backgroundSizes ? "background-size: $backgroundSizes;" : '',
+            $backgroundPositions ? "background-position: $backgroundPositions;" : '',
+            $backgroundRepeats ? "background-repeat: $backgroundRepeats;" : '',
+            $backgroundAttachment ? "background-attachment: $backgroundAttachment;" : ''
         ]);
     }
 
@@ -81,19 +76,11 @@ class BackgroundStrategyWithMediaMapping implements StrategyInterfaceWithMediaMa
     protected function parseValue(string $type, string|array $value, array $mediaMapping): string
     {
         if ($type === 'image') {
-            $mediaId = (int)$value['data']['mediaId'] ?? null;
-
-            if ($mediaId) {
-                $mediaSrc = $mediaMapping[$mediaId] ?? '';
-
-                return "url($mediaSrc)";
-            }
-
-            return 'none';
+            return $this->parseImage($value, $mediaMapping);
         }
 
         if ($type === 'gradient') {
-            $colorId = $value['data']['colorId'] ?? null;
+            $colorId = $value['colorId'] ?? null;
             $gradientData = $value['data'];
             $gradientType = $value['type'];
             $degree = $value['degree'];
@@ -101,21 +88,16 @@ class BackgroundStrategyWithMediaMapping implements StrategyInterfaceWithMediaMa
             $gradient = "$gradientType-gradient";
             $degreeValue = $gradientType === 'linear' && $degree ? "$degree," : '';
 
-            $gradientCss = '';
+            $gradientCss = [];
             foreach ($gradientData as $item) {
-                $color = $item['color'] ?? null;
-                $position = $item['position'];
+                $color = $item['color'];
+                $position = $item['position'] * 100 .'%';
                 $itemColorId = $item['colorId'] ?? null;
 
-                if ($color) {
-                    $gradientCss .= $itemColorId ? " var(--color-$itemColorId, $color)" : ' '.$color;
-                    $gradientCss .= ' '.$position * 100 .'%,';
-                } elseif ($itemColorId) {
-                    $gradientCss .= " var(--color-$itemColorId) ".$position * 100 .'%,';
-                }
+                $gradientCss[] = $itemColorId ? " var(--color-$itemColorId, $color) $position" : " $color $position";
             }
 
-            $gradientCss = rtrim($gradientCss, ',');
+            $gradientCss = join(',', $gradientCss);
             $colorStr = "$gradient($degreeValue$gradientCss)";
 
             return $colorId
@@ -123,6 +105,19 @@ class BackgroundStrategyWithMediaMapping implements StrategyInterfaceWithMediaMa
                 : $colorStr;
         }
 
-        return $value['color'] ?? $value;
+        return $value;
+    }
+
+    /**
+     * @param array $value
+     * @param array $mediaMapping
+     *
+     * @return string
+     */
+    protected function parseImage(array $value, array $mediaMapping): string
+    {
+        $mediaSrc = $mediaMapping[(int)$value['data']['mediaId']] ?? null;
+
+        return $mediaSrc ? "url($mediaSrc)" : 'none';
     }
 }

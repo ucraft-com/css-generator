@@ -21,6 +21,6 @@ class DefaultStrategy implements StrategyInterface
         $type = $variantStyle['type'];
         $value = $variantStyle['value'];
 
-        return "$type: $value;".PHP_EOL;
+        return "$type: $value;";
     }
 }

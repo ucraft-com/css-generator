@@ -75,10 +75,10 @@ class StyleCollector implements StyleCollectorContract
                     if(isset($breakpoints[$breakpointIndex + 1])){
                         $width = $breakpoints[$breakpointIndex + 1]['width'] - 1;
                     }
-                    $newBreakpoint->setMediaQuery("@media (max-width: {$width}px) {".PHP_EOL);
+                    $newBreakpoint->setMediaQuery("@media (max-width: {$width}px) {");
                     array_unshift($sortedBreakpoints, $newBreakpoint);
                 } else {
-                    $newBreakpoint->setMediaQuery("@media (min-width: {$breakpoint['width']}px) {".PHP_EOL);
+                    $newBreakpoint->setMediaQuery("@media (min-width: {$breakpoint['width']}px) {");
                     $sortedBreakpoints[] = $newBreakpoint;
                 }
             }

@@ -48,13 +48,13 @@ class StaticStylesheet extends AbstractStyleDecorator
         $css = '';
 
         if (!empty($this->colorMediaQuery)) {
-            $css .= $this->colorMediaQuery.PHP_EOL;
+            $css .= $this->colorMediaQuery;
         }
 
-        $css .= implode('', $this->styles).PHP_EOL;
+        $css .= implode('', $this->styles);
 
         if (!empty($this->colorMediaQuery)) {
-            $css .= '}'.PHP_EOL;
+            $css .= '}';
         }
 
         return $css;

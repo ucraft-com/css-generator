@@ -38,15 +38,7 @@ class CssGeneratorTest extends TestCase
         $generator = new CssGenerator($styleCollector);
         $css = $generator->generate();
 
-        $expected = 'p {
-text-transform: var(--text-text-transform);
-color: var(--text-color);
-}
-h1 {
-font-size: var(--h1-font-size);
-line-height: var(--h1-line-height);
-}
-';
+        $expected = 'p {text-transform: var(--text-text-transform);color: var(--text-color);}h1 {font-size: var(--h1-font-size);line-height: var(--h1-line-height);}';
 
         $this->assertEquals($expected, $css);
     }
@@ -92,7 +84,7 @@ line-height: var(--h1-line-height);
         ];
 
         $variantsStyles = [
-            '.uiElement-1' => [
+            '[data-widget-hash="random-hash"]' => [
                 [
                     'styles'       => [
                         [
@@ -125,20 +117,9 @@ line-height: var(--h1-line-height);
         $generator = new CssGenerator($styleCollector);
         $css = $generator->generate();
 
-        $expected = '.uiElement-1 {
-font-family: Helvetica;
-}
-@media (max-width: 769px) {
-}@media (max-width: 320px) {
-.uiElement-1:hover {
-color: rgb(0, 0, 0);
-}
-}@media (min-width: 1441px) {
-}@media (min-width: 1921px) {
-}';
+        $expected = '[data-widget-hash="random-hash"] {font-family: Helvetica;}@media (max-width: 1280px) {}@media (max-width: 768px) {[data-widget-hash="random-hash"]:hover {color: rgb(0, 0, 0);}}@media (min-width: 1441px) {}@media (min-width: 1921px) {}';
 
         $this->assertEquals($expected, $css);
-
     }
 
     protected function getStyleCollectorInstance(): StyleCollectorContract

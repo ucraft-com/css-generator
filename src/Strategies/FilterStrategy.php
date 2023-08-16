@@ -7,11 +7,6 @@ namespace CssGenerator\Strategies;
 class FilterStrategy implements StrategyInterface
 {
     /**
-     * @var string
-     */
-    protected string $key = 'filter: ';
-
-    /**
      * Converts given variantsStyles to relative css string.
      *
      * @param array $variantStyle
@@ -20,25 +15,20 @@ class FilterStrategy implements StrategyInterface
      */
     public function convert(array $variantStyle): string
     {
+        $property = 'filter:';
+
         foreach ($variantStyle['value'] as $value) {
             $filterType = $value['type'];
             $filterValue = $value['value'];
 
-            if ($filterType !== 'dropShadow') {
-                $this->key .= "$filterType($filterValue) ";
-            } else {
-                $this->key .= 'drop-shadow(';
-                foreach ($filterValue as $property) {
-                    $this->key .= $property.' ';
-                }
-                $this->key .= ')';
+            if ($filterType === 'dropShadow') {
+                $filterType = 'drop-shadow';
+                $filterValue = join(' ', $filterValue);
             }
+
+            $property .= " $filterType($filterValue)";
         }
 
-        if ($this->key !== 'filter: ') {
-            return rtrim($this->key).';'.PHP_EOL;
-        }
-
-        return '';
+        return $property.';';
     }
 }
