@@ -249,8 +249,8 @@ class BackgroundStrategyTest extends TestCase
 
         $backgroundStrategy = new BackgroundStrategy();
         $css = $backgroundStrategy->convert($variantsStyles, [1 => 'my/media/src/image.jpeg']);
-var_dump($css);die;
-        $expected = 'background: var(--color-20, radial-gradient( rgba(179, 60, 60, 1) 0%, rgba(255, 255, 255, 1) 100%));background-size: auto;background-position: 0px 0px;background-repeat: no-repeat;background-attachment: scroll;';
+
+        $expected = 'background: var(--color-20, radial-gradient( rgba(179, 60, 60, 1) 0%, rgba(255, 255, 255, 1) 100%)), url(my/media/src/image.jpeg);background-size: auto, cover;background-position: 0px 0px, 50% 50%;background-repeat: no-repeat, no-repeat;background-attachment: scroll, scroll;';
         $this->assertEquals($expected, $css);
     }
 }
