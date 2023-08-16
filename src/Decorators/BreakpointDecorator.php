@@ -6,7 +6,7 @@ namespace CssGenerator\Decorators;
 
 use function implode;
 
-class BreakpointDecorator extends AbstractStyleDecorator
+class BreakpointDecorator implements StyleDecoratorInterface
 {
     /**
      * @var array|StyleDecorator[]
@@ -105,7 +105,7 @@ class BreakpointDecorator extends AbstractStyleDecorator
             $css .= $this->getMediaQuery();
         }
 
-        foreach ($this->styles as $styles){
+        foreach ($this->styles as $styles) {
             $css .= implode('', $styles);
         }
 

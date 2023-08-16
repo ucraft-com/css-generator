@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CssGenerator\Decorators;
 
-class StaticStyleDecorator extends AbstractStyleDecorator
+class StaticStyleDecorator implements StyleDecoratorInterface
 {
     /**
      * @var array
@@ -43,7 +43,7 @@ class StaticStyleDecorator extends AbstractStyleDecorator
      */
     public function __toString(): string
     {
-        $css = "{$this->selector} {";
+        $css = "$this->selector {";
         foreach ($this->styles as $property => $value) {
             $css .= "$property: $value;";
         }

@@ -9,7 +9,7 @@ use function implode;
 /**
  * Stylesheet contains breakpoints, and generates css.
  */
-class Stylesheet extends AbstractStyleDecorator
+class Stylesheet implements StyleDecoratorInterface
 {
     /**
      * @var array<\CssGenerator\Decorators\BreakpointDecorator>

@@ -9,7 +9,7 @@ use function implode;
 /**
  * StaticStylesheet contains style without breakpoints, and generates css.
  */
-class StaticStylesheet extends AbstractStyleDecorator
+class StaticStylesheet implements StyleDecoratorInterface
 {
     protected string $colorMediaQuery;
 

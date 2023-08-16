@@ -8,7 +8,7 @@ use CssGenerator\StrategyFactory;
 
 use function rtrim;
 
-class StyleDecorator extends AbstractStyleDecorator
+class StyleDecorator implements StyleDecoratorInterface
 {
     /**
      * @var string Css selector
@@ -65,7 +65,8 @@ class StyleDecorator extends AbstractStyleDecorator
         $css = '';
 
         // 'transform' property name
-        $transformCss = 'transform: ';
+        $transformProperty = 'transform:';
+        $transformCss = [];
 
         // start css block
         $css .= !empty($this->styles) ? "{$this->selector} {" : '';
@@ -76,15 +77,15 @@ class StyleDecorator extends AbstractStyleDecorator
 
             // 'transform' case
             if (isset($style['group']) && $style['group'] === 'transform') {
-                $transformCss .= "$type($value) "; // join transform styles separated by spaces
+                $transformCss[] = "$type($value)"; // collect transform styles
                 continue;
             }
 
             $css .= StrategyFactory::create($style['type'])->convert($style, $this->mediaMapping);
         }
 
-        if ($transformCss !== 'transform: ') {
-            $css .= rtrim($transformCss).';'; // add collected transform property, value
+        if (!empty($transformCss)) {
+            $css .= $transformProperty.join(' ', $transformCss).';'; // add collected transform property, value
         }
 
         // close css block
