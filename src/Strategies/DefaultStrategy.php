@@ -18,7 +18,7 @@ class DefaultStrategy implements StrategyInterface
      */
     public function convert(array $variantStyle): string
     {
-        if (!isset($value['value']) || $value['value'] === '') {
+        if (!isset($variantStyle['value']) || $variantStyle['value'] === '') {
             return '';
         }
 
