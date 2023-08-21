@@ -72,7 +72,7 @@ class StyleDecorator implements StyleDecoratorInterface
         $css .= !empty($this->styles) ? "{$this->selector} {" : '';
 
         foreach ($this->styles as $style) {
-            if ($style['value'] !== '0' && empty($style['value'])) {
+            if (isset($style['value']) && $style['value'] !== '0' && empty($style['value'])) {
                 continue;
             }
 
