@@ -41,10 +41,10 @@ class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
             $backgroundValue = $variantStyleValue['type'] === 'solid' ? "linear-gradient($color, $color)" : $color;
 
             $styles['background'][] = $backgroundValue;
-            $styles['background-size'][] = $data['backgroundSize'];
-            $styles['background-position'][] = $data['backgroundPosition'];
-            $styles['background-repeat'][] = $data['backgroundRepeat'];
-            $styles['background-attachment'][] = $data['backgroundAttachment'];
+            $styles['background-size'][] = $data['backgroundSize'] ?? $this->defaultBackgroundProps['backgroundSize'];
+            $styles['background-position'][] = $data['backgroundPosition'] ?? $this->defaultBackgroundProps['backgroundPosition'];
+            $styles['background-repeat'][] = $data['backgroundRepeat'] ?? $this->defaultBackgroundProps['backgroundRepeat'];
+            $styles['background-attachment'][] = $data['backgroundAttachment'] ?? $this->defaultBackgroundProps['backgroundAttachment'];
         }
 
         if (empty($styles)) {
