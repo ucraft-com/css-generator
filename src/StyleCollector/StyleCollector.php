@@ -72,7 +72,7 @@ class StyleCollector implements StyleCollectorContract
                 if ($defaultBreakpointWidth === 0 || $defaultBreakpointWidth > $breakpoint['width']) {
                     $width = $breakpoint['width'];
 
-                    if(isset($breakpoints[$breakpointIndex + 1])){
+                    if (isset($breakpoints[$breakpointIndex + 1])) {
                         $width = $breakpoints[$breakpointIndex + 1]['width'] - 1;
                     }
                     $newBreakpoint->setMediaQuery("@media (max-width: {$width}px) {");
@@ -212,7 +212,8 @@ class StyleCollector implements StyleCollectorContract
         }
 
         if (!empty($variantsStyle['cssState']) && $variantsStyle['cssState'] !== 'normal') {
-            $selector .= ':'.$variantsStyle['cssState'];
+            $selector .= $variantsStyle['cssState'] === 'selected' ? '.' : ':';
+            $selector .= $variantsStyle['cssState'];
         }
 
         return $selector;
