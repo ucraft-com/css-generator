@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace CssGenerator\Tests\Unit\Strategies;
 
 use CssGenerator\Strategies\BoxShadowStrategy;
-use CssGenerator\Strategies\FilterStrategy;
 use PHPUnit\Framework\TestCase;
 
 class BoxShadowStrategyTest extends TestCase
@@ -15,14 +14,12 @@ class BoxShadowStrategyTest extends TestCase
         $styles = [
             "type"  => "box-shadow",
             "value" => [
-                [
-                    "offset-x"      => "0px",
-                    "offset-y"      => "0px",
-                    "blur-radius"   => "0px",
-                    "spread-radius" => "0px",
-                    "color"         => "rgba(0, 0, 0, 0.1)",
-                    "active"        => true
-                ]
+                "offset-x"      => "0px",
+                "offset-y"      => "0px",
+                "blur-radius"   => "0px",
+                "spread-radius" => "0px",
+                "color"         => "rgba(0, 0, 0, 0.1)",
+                "active"        => true
             ]
         ];
 
@@ -38,14 +35,12 @@ class BoxShadowStrategyTest extends TestCase
         $styles = [
             "type"  => "box-shadow",
             "value" => [
-                [
-                    "offset-x"      => "0px",
-                    "offset-y"      => "0px",
-                    "blur-radius"   => "0px",
-                    "spread-radius" => "0px",
-                    "color"         => "rgba(0, 0, 0, 0.1)",
-                    "active"        => false
-                ]
+                "offset-x"      => "0px",
+                "offset-y"      => "0px",
+                "blur-radius"   => "0px",
+                "spread-radius" => "0px",
+                "color"         => "rgba(0, 0, 0, 0.1)",
+                "active"        => false
             ]
         ];
 

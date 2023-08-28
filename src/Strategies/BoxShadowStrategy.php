@@ -23,31 +23,30 @@ class BoxShadowStrategy implements StrategyInterface
         }
 
         $property = 'box-shadow:';
+        $value = $variantStyle['value'];
 
-        foreach ($variantStyle['value'] as $value) {
-            if (!$value['active']) {
-                return $property.' unset;';
-            }
+        if (!$value['active']) {
+            return $property.' unset;';
+        }
 
-            if (!empty($value['offset-x'])) {
-                $property .= ' '.$value['offset-x'];
-            }
+        if (!empty($value['offset-x'])) {
+            $property .= ' '.$value['offset-x'];
+        }
 
-            if (!empty($value['offset-y'])) {
-                $property .= ' '.$value['offset-y'];
-            }
+        if (!empty($value['offset-y'])) {
+            $property .= ' '.$value['offset-y'];
+        }
 
-            if (!empty($value['blur-radius'])) {
-                $property .= ' '.$value['blur-radius'];
-            }
+        if (!empty($value['blur-radius'])) {
+            $property .= ' '.$value['blur-radius'];
+        }
 
-            if (!empty($value['spread-radius'])) {
-                $property .= ' '.$value['spread-radius'];
-            }
+        if (!empty($value['spread-radius'])) {
+            $property .= ' '.$value['spread-radius'];
+        }
 
-            if (!empty($value['color'])) {
-                $property .= ' '.$value['color'];
-            }
+        if (!empty($value['color'])) {
+            $property .= ' '.$value['color'];
         }
 
         return $property.';';
