@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CssGenerator;
 
 use CssGenerator\Strategies\BackgroundStrategy;
+use CssGenerator\Strategies\BoxShadowStrategy;
 use CssGenerator\Strategies\DefaultStrategy;
 use CssGenerator\Strategies\FilterStrategy;
 use CssGenerator\Strategies\StrategyInterface;
@@ -24,6 +25,7 @@ class StrategyFactory
         return match ($type) {
             "filter" => new FilterStrategy(),
             "background" => new BackgroundStrategy(),
+            "box-shadow" => new BoxShadowStrategy(),
             default => new DefaultStrategy(),
         };
     }
