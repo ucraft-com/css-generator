@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CssGenerator\Tests\Unit\Strategies;
 
 use CssGenerator\Strategies\BackgroundStrategy;
+use CssGenerator\Strategies\BoxShadowStrategy;
 use CssGenerator\Strategies\DefaultStrategy;
 use CssGenerator\Strategies\FilterStrategy;
 use CssGenerator\StrategyFactory;
@@ -24,6 +25,14 @@ class StrategyFactoryTest extends TestCase
     {
         $expected = new BackgroundStrategy();
         $actual = StrategyFactory::create('background');
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testCreate_WhenGivenBoxShadowAsArgument_ReturnsBoxShadowInstance(): void
+    {
+        $expected = new BoxShadowStrategy();
+        $actual = StrategyFactory::create('box-shadow');
 
         $this->assertEquals($expected, $actual);
     }
