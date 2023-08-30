@@ -25,6 +25,10 @@ class DefaultStrategy implements StrategyInterface
         $type = $variantStyle['type'];
         $value = $variantStyle['value'];
 
+        if ($type === 'font-family') {
+            $value = '"'.$value.'"';
+        }
+
         return "$type: $value;";
     }
 }

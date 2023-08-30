@@ -37,4 +37,18 @@ class DefaultStrategyTest extends TestCase
             $this->assertEquals($assertion[$index], $css);
         }
     }
+
+    public function testConvert_WhenGivenFontFamily_ReturnsValueWrappedWithQuote(): void
+    {
+        $variantsStyles = [
+            'type'  => 'font-family',
+            'value' => "Something Fam'ily"
+        ];
+
+        $defaultStrategy = new DefaultStrategy();
+
+        $css = $defaultStrategy->convert($variantsStyles);
+
+        $this->assertEquals('font-family: "Something Fam\'ily";', $css);
+    }
 }

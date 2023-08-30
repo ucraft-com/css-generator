@@ -18,7 +18,7 @@ class BoxShadowStrategy implements StrategyInterface
      */
     public function convert(array $variantStyle): string
     {
-        if (empty($variantStyle['value'])) {
+        if (empty($variantStyle['value']) || is_string($variantStyle['value'])) {
             return '';
         }
 
