@@ -12,6 +12,7 @@ use CssGenerator\Decorators\StyleDecoratorInterface;
 use CssGenerator\Decorators\Stylesheet;
 
 use function array_unshift;
+use function in_array;
 
 /**
  * StyleCollector collects all necessary data for generating css.
@@ -43,7 +44,8 @@ class StyleCollector implements StyleCollectorContract
     {
         $formattedMedia = [];
         foreach ($media as $medium) {
-            $formattedMedia[$medium['id']] = $pathResolver($medium['filename']);
+            $filename = !in_array($medium['extension'], ['svg', 'avif', 'gif']) ? $medium['name'].'.webp' :  $medium['name'].'.'.$medium['extension'];
+            $formattedMedia[$medium['id']] = $pathResolver($filename);
         }
 
         $this->data['media'] = $formattedMedia;

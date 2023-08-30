@@ -43,6 +43,128 @@ class CssGeneratorTest extends TestCase
         $this->assertEquals($expected, $css);
     }
 
+    public function testGenerate_WhenGivenSimpleStylesAndBackground_GenerateCOrrectBackgroundWithWebP(): void
+    {
+        $breakpoints = [
+            [
+                "id"        => 1,
+                "width"     => 320,
+                "default"   => false,
+                "selected"  => false,
+                "createdAt" => "2022-05-19T11:57:40.000000Z",
+            ],
+            [
+                "id"        => 2,
+                "width"     => 769,
+                "default"   => false,
+                "selected"  => false,
+                "createdAt" => "2022-05-19T11:57:40.000000Z",
+            ],
+            [
+                "id"        => 3,
+                "width"     => 1281,
+                "default"   => true,
+                "selected"  => true,
+                "createdAt" => "2022-05-19T11:57:40.000000Z",
+            ],
+            [
+                "id"        => 4,
+                "width"     => 1441,
+                "default"   => false,
+                "selected"  => false,
+                "createdAt" => "2022-05-19T11:57:40.000000Z",
+            ],
+            [
+                "id"        => 5,
+                "width"     => 1921,
+                "default"   => false,
+                "selected"  => false,
+                "createdAt" => "2022-05-19T11:57:40.000000Z",
+            ],
+        ];
+
+        $styleCollector = $this->getStyleCollectorInstance();
+
+        $variantsStyles = [
+            '[data-widget-hash="random-hash"]' => [
+                [
+                    'styles'       => [
+                        [
+                            "type"  => "background",
+                            "value" => [
+                                [
+                                    "type"   => "image",
+                                    "value"  => [
+                                        "data" => [
+                                            "backgroundSize"       => "cover",
+                                            "backgroundPosition"   => "50% 50%",
+                                            "backgroundRepeat"     => "no-repeat",
+                                            "backgroundAttachment" => "scroll",
+                                            "mediaId"              => "1"
+                                        ]
+                                    ],
+                                    "active" => true
+                                ]
+                            ]
+                        ]
+                    ],
+                    'cssState'     => 'normal',
+                    'breakpointId' => 3
+                ],
+                [
+                    'styles'       => [
+                        [
+                            "type"  => "background",
+                            "value" => [
+                                [
+                                    "type"   => "image",
+                                    "value"  => [
+                                        "data" => [
+                                            "backgroundSize"       => "cover",
+                                            "backgroundPosition"   => "50% 50%",
+                                            "backgroundRepeat"     => "no-repeat",
+                                            "backgroundAttachment" => "scroll",
+                                            "mediaId"              => "2"
+                                        ]
+                                    ],
+                                    "active" => true
+                                ]
+                            ]
+                        ]
+                    ],
+                    'cssState'     => 'normal',
+                    'breakpointId' => 1
+                ],
+            ]
+        ];
+
+        $media = [
+            [
+                'id'        => 1,
+                'name'      => 'test',
+                'extension' => 'jpeg'
+            ],
+            [
+                'id'        => 2,
+                'name'      => 'test',
+                'extension' => 'avif'
+            ]
+        ];
+
+        $styleCollector
+            ->assignMedia($media, fn(string $filename = null) => $filename)
+            ->assignVariantsStyles($variantsStyles)
+            ->assignBreakpoints($breakpoints)
+            ->build();
+
+        $generator = new CssGenerator($styleCollector);
+        $css = $generator->generate();
+
+        $expected = '[data-widget-hash="random-hash"] {background: url(test.webp);background-size: cover;background-position: 50% 50%;background-repeat: no-repeat;background-attachment: scroll;}@media (max-width: 1280px) {}@media (max-width: 768px) {[data-widget-hash="random-hash"] {background: url(test.avif);background-size: cover;background-position: 50% 50%;background-repeat: no-repeat;background-attachment: scroll;}}@media (min-width: 1441px) {}@media (min-width: 1921px) {}';
+
+        $this->assertEquals($expected, $css);
+    }
+
     public function testGenerate_WhenGivenWithBreakpoints_GeneratesBasedOnBreakpoints(): void
     {
         $breakpoints = [
