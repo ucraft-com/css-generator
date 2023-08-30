@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CssGenerator\Strategies;
 
+use function is_string;
+
 /**
  * BoxShadowStrategy handles box-shadow styles.
  */
