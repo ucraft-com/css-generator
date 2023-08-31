@@ -239,7 +239,7 @@ class CssGeneratorTest extends TestCase
         $generator = new CssGenerator($styleCollector);
         $css = $generator->generate();
 
-        $expected = '[data-widget-hash="random-hash"] {font-family: Helvetica;}@media (max-width: 1280px) {}@media (max-width: 768px) {[data-widget-hash="random-hash"]:hover {color: rgb(0, 0, 0);}}@media (min-width: 1441px) {}@media (min-width: 1921px) {}';
+        $expected = '[data-widget-hash="random-hash"] {font-family: "Helvetica";}@media (max-width: 1280px) {}@media (max-width: 768px) {[data-widget-hash="random-hash"]:hover {color: rgb(0, 0, 0);}}@media (min-width: 1441px) {}@media (min-width: 1921px) {}';
 
         $this->assertEquals($expected, $css);
     }
