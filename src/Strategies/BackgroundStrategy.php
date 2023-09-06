@@ -108,11 +108,17 @@ class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
 
         $gradientCss = [];
         foreach ($value['data'] as $item) {
-            $color = $item['color'];
+            $color = $item['color'] ?? null;
             $position = $item['position'] * 100 .'%';
             $itemColorId = $item['colorId'] ?? null;
 
-            $gradientCss[] = $itemColorId ? " var(--color-$itemColorId, $color) $position" : " $color $position";
+            if ($itemColorId && $color) {
+                $gradientCss[] = " var(--color-$itemColorId, $color) $position";
+            } elseif ($itemColorId) {
+                $gradientCss[] = " var(--color-$itemColorId) $position";
+            } elseif ($color) {
+                $gradientCss[] = " $color $position";
+            }
         }
 
         $gradientCss = join(',', $gradientCss);

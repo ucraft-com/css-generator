@@ -173,6 +173,39 @@ class BackgroundStrategyTest extends TestCase
         $this->assertEquals($expected, $css);
     }
 
+    public function testConvert_WhenGivenGradientBackgroundDataColorIdAndNotGivenColor_ReturnsGradientCss(): void
+    {
+        $variantsStyles = [
+            'type'  => 'background',
+            'value' => [
+                [
+                    'type'   => 'gradient',
+                    'value'  => [
+                        'data' => [
+                            [
+                                'position' => '0',
+                                "colorId" => "20"
+                            ],
+                            [
+                                "colorId" => "1",
+                                'position' => '1'
+                            ],
+                        ],
+                        "type"    => "linear",
+                        "degree"  => "0deg",
+                    ],
+                    'active' => true
+                ]
+            ],
+        ];
+
+        $backgroundStrategy = new BackgroundStrategy();
+        $css = $backgroundStrategy->convert($variantsStyles);
+
+        $expected = 'background: linear-gradient(0deg, var(--color-20) 0%, var(--color-1) 100%);background-size: auto;background-position: 0px 0px;background-repeat: no-repeat;background-attachment: scroll;';
+        $this->assertEquals($expected, $css);
+    }
+
     public function testConvert_WhenGivenGradientBackgroundForRadialType_ReturnsGradientCss(): void
     {
         $variantsStyles = [
