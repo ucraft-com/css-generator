@@ -113,7 +113,7 @@ class BackgroundStrategyTest extends TestCase
                 [
                     'type'   => 'gradient',
                     'value'  => [
-                        'data' => [
+                        'data'    => [
                             [
                                 'color'    => 'rgba(179, 60, 60, 1)',
                                 'position' => '0'
@@ -147,19 +147,19 @@ class BackgroundStrategyTest extends TestCase
                 [
                     'type'   => 'gradient',
                     'value'  => [
-                        'data' => [
+                        'data'   => [
                             [
                                 'color'    => 'rgba(179, 60, 60, 1)',
                                 'position' => '0',
-                                "colorId" => "20"
+                                "colorId"  => "20"
                             ],
                             [
                                 'color'    => 'rgba(255, 255, 255, 1)',
                                 'position' => '1'
                             ],
                         ],
-                        "type"    => "linear",
-                        "degree"  => "0deg",
+                        "type"   => "linear",
+                        "degree" => "0deg",
                     ],
                     'active' => true
                 ]
@@ -181,18 +181,18 @@ class BackgroundStrategyTest extends TestCase
                 [
                     'type'   => 'gradient',
                     'value'  => [
-                        'data' => [
+                        'data'   => [
                             [
                                 'position' => '0',
-                                "colorId" => "20"
+                                "colorId"  => "20"
                             ],
                             [
-                                "colorId" => "1",
+                                "colorId"  => "1",
                                 'position' => '1'
                             ],
                         ],
-                        "type"    => "linear",
-                        "degree"  => "0deg",
+                        "type"   => "linear",
+                        "degree" => "0deg",
                     ],
                     'active' => true
                 ]
@@ -214,7 +214,7 @@ class BackgroundStrategyTest extends TestCase
                 [
                     'type'   => 'gradient',
                     'value'  => [
-                        'data' => [
+                        'data'    => [
                             [
                                 'color'    => 'rgba(179, 60, 60, 1)',
                                 'position' => '0'
@@ -248,7 +248,7 @@ class BackgroundStrategyTest extends TestCase
                 [
                     'type'   => 'gradient',
                     'value'  => [
-                        'data' => [
+                        'data'    => [
                             [
                                 'color'    => 'rgba(179, 60, 60, 1)',
                                 'position' => '0'
@@ -284,6 +284,54 @@ class BackgroundStrategyTest extends TestCase
         $css = $backgroundStrategy->convert($variantsStyles, [1 => 'my/media/src/image.jpeg']);
 
         $expected = 'background: var(--color-20, radial-gradient( rgba(179, 60, 60, 1) 0%, rgba(255, 255, 255, 1) 100%)), url(my/media/src/image.jpeg);background-size: auto, cover;background-position: 0px 0px, 50% 50%;background-repeat: no-repeat, no-repeat;background-attachment: scroll, scroll;';
+        $this->assertEquals($expected, $css);
+    }
+
+    public function testConvert_WhenGivenImageBackgroundAndSources_ReturnsGeneratedBackgroundCss(): void
+    {
+        $variantsStyles = [
+            'type'  => 'background',
+            'value' => [
+                [
+                    'type'   => 'gradient',
+                    'value'  => [
+                        'data'    => [
+                            [
+                                'color'    => 'rgba(179, 60, 60, 1)',
+                                'position' => '0'
+                            ],
+                            [
+                                'color'    => 'rgba(255, 255, 255, 1)',
+                                'position' => '1'
+                            ],
+                        ],
+                        "type"    => "radial",
+                        "degree"  => "0deg",
+                        "colorId" => "20"
+                    ],
+                    'active' => true
+                ],
+                [
+                    'type'   => 'image',
+                    'value'  => [
+                        'data' => [
+                            "backgroundSize"       => "cover",
+                            "backgroundPosition"   => "50% 50%",
+                            "backgroundRepeat"     => "no-repeat",
+                            "backgroundAttachment" => "scroll",
+                            "destinationId"        => "1",
+                            "sources"              => 'my-media.jpeg'
+                        ],
+                    ],
+                    'active' => true
+                ]
+            ],
+        ];
+
+        $backgroundStrategy = new BackgroundStrategy();
+        $css = $backgroundStrategy->convert($variantsStyles, [1 => 'my/media/src/image.jpeg', 'my-media.jpeg' => 'my/media/src/my-media.jpeg']);
+
+        $expected = 'background: var(--color-20, radial-gradient( rgba(179, 60, 60, 1) 0%, rgba(255, 255, 255, 1) 100%)), url(my/media/src/my-media.jpeg);background-size: auto, cover;background-position: 0px 0px, 50% 50%;background-repeat: no-repeat, no-repeat;background-attachment: scroll, scroll;';
         $this->assertEquals($expected, $css);
     }
 }

@@ -44,8 +44,9 @@ class StyleCollector implements StyleCollectorContract
     {
         $formattedMedia = [];
         foreach ($media as $medium) {
-            $filename = !in_array($medium['extension'], ['svg', 'avif', 'gif']) ? $medium['name'].'.webp' :  $medium['name'].'.'.$medium['extension'];
+            $filename = !in_array($medium['extension'], ['svg', 'avif', 'gif']) ? $medium['name'].'.webp' : $medium['name'].'.'.$medium['extension'];
             $formattedMedia[$medium['id']] = $pathResolver($filename);
+            $formattedMedia[$medium['filename']] = $pathResolver($filename); // used in case of block, when we have sources, instead of mediaId
         }
 
         $this->data['media'] = $formattedMedia;
