@@ -88,10 +88,12 @@ class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
      */
     protected function parseImage(array $value, array $mediaMapping): string
     {
+        $mediaSrc = null;
+
         // In case of blocks we dont have mediaId, we have sources
-        if (isset($value['data']['mediaId'])) {
+        if (!empty($value['data']['mediaId'])) {
             $mediaSrc = $mediaMapping[(int)$value['data']['mediaId']] ?? null;
-        } else {
+        } elseif (!empty($value['data']['sources'])) {
             $sources = $value['data']['sources'];
             $mediaSrc = $mediaMapping[$sources] ?? null;
         }
