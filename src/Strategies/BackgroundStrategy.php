@@ -96,6 +96,8 @@ class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
         } elseif (!empty($value['data']['sources'])) {
             $sources = $value['data']['sources'];
             $mediaSrc = $mediaMapping[$sources] ?? null;
+        } elseif (!empty($value['data']['url'])) {
+            $mediaSrc = $value['data']['url'];
         }
 
         return $mediaSrc ? "url($mediaSrc)" : 'none';
