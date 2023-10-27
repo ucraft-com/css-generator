@@ -90,7 +90,7 @@ class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
     {
         $mediaSrc = null;
 
-        // In case of blocks we dont have mediaId, we have sources
+        // In case of blocks we don't have mediaId, we have sources
         if (!empty($value['data']['mediaId'])) {
             $mediaSrc = $mediaMapping[(int)$value['data']['mediaId']] ?? null;
         } elseif (!empty($value['data']['sources'])) {
@@ -110,7 +110,7 @@ class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
      */
     protected function parseGradient(array $value): string
     {
-        $colorId = $value['colorId'] ?? null;
+        $colorAlias = $value['colorAlias'] ?? null;
         $gradientType = $value['type'];
         $degree = $value['degree'];
 
@@ -120,12 +120,12 @@ class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
         foreach ($value['data'] as $item) {
             $color = $item['color'] ?? null;
             $position = $item['position'] * 100 .'%';
-            $itemColorId = $item['colorId'] ?? null;
+            $itemColorAlias = $item['colorAlias'] ?? null;
 
-            if ($itemColorId && $color) {
-                $gradientCss[] = " var(--color-$itemColorId, $color) $position";
-            } elseif ($itemColorId) {
-                $gradientCss[] = " var(--color-$itemColorId) $position";
+            if ($itemColorAlias && $color) {
+                $gradientCss[] = " var(--$itemColorAlias, $color) $position";
+            } elseif ($itemColorAlias) {
+                $gradientCss[] = " var(--$itemColorAlias) $position";
             } elseif ($color) {
                 $gradientCss[] = " $color $position";
             }
@@ -134,8 +134,8 @@ class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
         $gradientCss = join(',', $gradientCss);
         $colorStr = "$gradientType-gradient($degreeValue$gradientCss)";
 
-        return $colorId
-            ? "var(--color-$colorId, $colorStr)"
+        return $colorAlias
+            ? "var(--$colorAlias, $colorStr)"
             : $colorStr;
     }
 }

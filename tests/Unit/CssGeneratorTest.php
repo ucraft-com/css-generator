@@ -142,17 +142,19 @@ class CssGeneratorTest extends TestCase
             [
                 'id'        => 1,
                 'name'      => 'test',
+                'filename'  => 'test.jpeg',
                 'extension' => 'jpeg'
             ],
             [
                 'id'        => 2,
                 'name'      => 'test',
+                'filename'  => 'test.avif',
                 'extension' => 'avif'
             ]
         ];
 
         $styleCollector
-            ->assignMedia($media, fn(string $filename = null) => $filename)
+            ->assignMedia($media, fn (string $filename = null) => $filename)
             ->assignVariantsStyles($variantsStyles)
             ->assignBreakpoints($breakpoints)
             ->build();
