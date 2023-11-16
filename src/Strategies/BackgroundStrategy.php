@@ -123,9 +123,9 @@ class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
             $itemColorAlias = $item['colorAlias'] ?? null;
 
             if ($itemColorAlias && $color) {
-                $gradientCss[] = " var(--$itemColorAlias, $color) $position";
+                $gradientCss[] = " var(--color-$itemColorAlias, $color) $position";
             } elseif ($itemColorAlias) {
-                $gradientCss[] = " var(--$itemColorAlias) $position";
+                $gradientCss[] = " var(--color-$itemColorAlias) $position";
             } elseif ($color) {
                 $gradientCss[] = " $color $position";
             }
@@ -135,7 +135,7 @@ class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
         $colorStr = "$gradientType-gradient($degreeValue$gradientCss)";
 
         return $colorAlias
-            ? "var(--$colorAlias, $colorStr)"
+            ? "var(--color-$colorAlias, $colorStr)"
             : $colorStr;
     }
 }
