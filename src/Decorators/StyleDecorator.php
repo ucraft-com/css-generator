@@ -6,7 +6,7 @@ namespace CssGenerator\Decorators;
 
 use CssGenerator\StrategyFactory;
 
-use function rtrim;
+use function filter_var;
 
 class StyleDecorator implements StyleDecoratorInterface
 {
@@ -68,6 +68,10 @@ class StyleDecorator implements StyleDecoratorInterface
         $transformProperty = 'transform:';
         $transformCss = [];
 
+        // 'text-shadow' property name
+        $textShadowProperty = 'text-shadow:';
+        $textShadowCss = [];
+
         // start css block
         $css .= !empty($this->styles) ? "{$this->selector} {" : '';
 
@@ -85,11 +89,24 @@ class StyleDecorator implements StyleDecoratorInterface
                 continue;
             }
 
+            // 'text-shadow' case
+            if (isset($style['group']) && $style['group'] === 'text-shadow') {
+                $textShadowCss[$type] = $value; // collect text-shadow styles
+                continue;
+            }
+
             $css .= StrategyFactory::create($style['type'])->convert($style, $this->mediaMapping);
         }
 
         if (!empty($transformCss)) {
             $css .= $transformProperty.join(' ', $transformCss).';'; // add collected transform property, value
+        }
+
+        if (!empty($textShadowCss) && !empty($textShadowCss['text-shadow-enabled']) && filter_var(
+                $textShadowCss['text-shadow-enabled'],
+                FILTER_VALIDATE_BOOLEAN
+            ) === true) {
+            $css .= $textShadowProperty.' '.$textShadowCss['text-shadow-offset-x'].' '.$textShadowCss['text-shadow-offset-y'].' '.$textShadowCss['text-shadow-blur-radius'].' '.$textShadowCss['text-shadow-color'].';';
         }
 
         // close css block
