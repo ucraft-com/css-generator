@@ -106,7 +106,7 @@ class StyleDecorator implements StyleDecoratorInterface
                 $textShadowCss['text-shadow-enabled'],
                 FILTER_VALIDATE_BOOLEAN
             ) === true) {
-            $css .= $textShadowProperty.' '.$textShadowCss['text-shadow-offset-x'].' '.$textShadowCss['text-shadow-offset-y'].' '.$textShadowCss['text-shadow-blur-radius'].' '.$textShadowCss['text-shadow-color'].';';
+            $css .= $textShadowProperty.' '.$textShadowCss['text-shadow-offset-x'].' '.$textShadowCss['text-shadow-offset-y'].' '.($textShadowCss['text-shadow-blur-radius'] ?? 0).' '.$textShadowCss['text-shadow-color'].';';
         }
 
         // close css block
