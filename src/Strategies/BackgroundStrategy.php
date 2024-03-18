@@ -36,6 +36,7 @@ class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
             }
 
             $color = $this->parseValue($variantStyleValue['type'], $variantStyleValue['value'], $mediaMapping);
+            file_put_contents('logs.txt', $color.PHP_EOL , FILE_APPEND | LOCK_EX);
 
             $data = $variantStyleValue['type'] === 'image' ? $variantStyleValue['value']['data'] : $this->defaultBackgroundProps;
             $backgroundValue = $variantStyleValue['type'] === 'solid' ? "linear-gradient($color, $color)" : $color;
