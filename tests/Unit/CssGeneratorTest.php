@@ -36,14 +36,14 @@ class CssGeneratorTest extends TestCase
             ->build();
 
         $generator = new CssGenerator($styleCollector);
-        $css = $generator->generate();
+        $css = $generator->generate()[0];
 
         $expected = 'p {text-transform: var(--text-text-transform);color: var(--text-color);}h1 {font-size: var(--h1-font-size);line-height: var(--h1-line-height);}';
 
         $this->assertEquals($expected, $css);
     }
 
-    public function testGenerate_WhenGivenSimpleStylesAndBackground_GenerateCOrrectBackgroundWithWebP(): void
+    public function testGenerate_WhenGivenSimpleStylesAndBackground_GenerateCorrectBackgroundWithWebP(): void
     {
         $breakpoints = [
             [
@@ -162,9 +162,10 @@ class CssGeneratorTest extends TestCase
         $generator = new CssGenerator($styleCollector);
         $css = $generator->generate();
 
-        $expected = '[data-widget-hash="random-hash"] {background: url(test.webp);background-size: cover;background-position: 50% 50%;background-repeat: no-repeat;background-attachment: scroll;}@media (max-width: 1280px) {}@media (max-width: 768px) {[data-widget-hash="random-hash"] {background: url(test.avif);background-size: cover;background-position: 50% 50%;background-repeat: no-repeat;background-attachment: scroll;}}@media (min-width: 1441px) {}@media (min-width: 1921px) {}';
-
-        $this->assertEquals($expected, $css);
+        $expectedBreakpoint1 = '[data-widget-hash="random-hash"] {background: url(test.avif);background-size: cover;background-position: 50% 50%;background-repeat: no-repeat;background-attachment: scroll;}';
+        $expectedBreakpoint3 = '[data-widget-hash="random-hash"] {background: url(test.webp);background-size: cover;background-position: 50% 50%;background-repeat: no-repeat;background-attachment: scroll;}';
+        $this->assertEquals($expectedBreakpoint1, $css[1]);
+        $this->assertEquals($expectedBreakpoint3, $css[3]);
     }
 
     public function testGenerate_WhenGivenWithBreakpoints_GeneratesBasedOnBreakpoints(): void
@@ -241,9 +242,10 @@ class CssGeneratorTest extends TestCase
         $generator = new CssGenerator($styleCollector);
         $css = $generator->generate();
 
-        $expected = '[data-widget-hash="random-hash"] {font-family: "Helvetica";}@media (max-width: 1280px) {}@media (max-width: 768px) {[data-widget-hash="random-hash"]:hover {color: rgb(0, 0, 0);}}@media (min-width: 1441px) {}@media (min-width: 1921px) {}';
-
-        $this->assertEquals($expected, $css);
+        $expectedBreakpoint1 = '[data-widget-hash="random-hash"]:hover {color: rgb(0, 0, 0);}';
+        $expectedBreakpoint3 = '[data-widget-hash="random-hash"] {font-family: "Helvetica";}';
+        $this->assertEquals($expectedBreakpoint1, $css[1]);
+        $this->assertEquals($expectedBreakpoint3, $css[3]);
     }
 
     protected function getStyleCollectorInstance(): StyleCollectorContract

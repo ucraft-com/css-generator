@@ -135,7 +135,7 @@ class BackgroundStrategyTest extends TestCase
         $backgroundStrategy = new BackgroundStrategy();
         $css = $backgroundStrategy->convert($variantsStyles);
 
-        $expected = 'background: var(--my-color-alias, linear-gradient(0deg, rgba(179, 60, 60, 1) 0%, rgba(255, 255, 255, 1) 100%));background-size: auto;background-position: 0px 0px;background-repeat: no-repeat;background-attachment: scroll;';
+        $expected = 'background: var(--color-my-color-alias, linear-gradient(0deg, rgba(179, 60, 60, 1) 0%, rgba(255, 255, 255, 1) 100%));background-size: auto;background-position: 0px 0px;background-repeat: no-repeat;background-attachment: scroll;';
         $this->assertEquals($expected, $css);
     }
 
@@ -169,7 +169,7 @@ class BackgroundStrategyTest extends TestCase
         $backgroundStrategy = new BackgroundStrategy();
         $css = $backgroundStrategy->convert($variantsStyles);
 
-        $expected = 'background: linear-gradient(0deg, var(--my-color-alias, rgba(179, 60, 60, 1)) 0%, rgba(255, 255, 255, 1) 100%);background-size: auto;background-position: 0px 0px;background-repeat: no-repeat;background-attachment: scroll;';
+        $expected = 'background: linear-gradient(0deg, var(--color-my-color-alias, rgba(179, 60, 60, 1)) 0%, rgba(255, 255, 255, 1) 100%);background-size: auto;background-position: 0px 0px;background-repeat: no-repeat;background-attachment: scroll;';
         $this->assertEquals($expected, $css);
     }
 
@@ -202,7 +202,7 @@ class BackgroundStrategyTest extends TestCase
         $backgroundStrategy = new BackgroundStrategy();
         $css = $backgroundStrategy->convert($variantsStyles);
 
-        $expected = 'background: linear-gradient(0deg, var(--my-color-alias) 0%, var(--my-other-alias) 100%);background-size: auto;background-position: 0px 0px;background-repeat: no-repeat;background-attachment: scroll;';
+        $expected = 'background: linear-gradient(0deg, var(--color-my-color-alias) 0%, var(--color-my-other-alias) 100%);background-size: auto;background-position: 0px 0px;background-repeat: no-repeat;background-attachment: scroll;';
         $this->assertEquals($expected, $css);
     }
 
@@ -236,7 +236,7 @@ class BackgroundStrategyTest extends TestCase
         $backgroundStrategy = new BackgroundStrategy();
         $css = $backgroundStrategy->convert($variantsStyles);
 
-        $expected = 'background: var(--my-color-alias, radial-gradient( rgba(179, 60, 60, 1) 0%, rgba(255, 255, 255, 1) 100%));background-size: auto;background-position: 0px 0px;background-repeat: no-repeat;background-attachment: scroll;';
+        $expected = 'background: var(--color-my-color-alias, radial-gradient( rgba(179, 60, 60, 1) 0%, rgba(255, 255, 255, 1) 100%));background-size: auto;background-position: 0px 0px;background-repeat: no-repeat;background-attachment: scroll;';
         $this->assertEquals($expected, $css);
     }
 
@@ -283,7 +283,7 @@ class BackgroundStrategyTest extends TestCase
         $backgroundStrategy = new BackgroundStrategy();
         $css = $backgroundStrategy->convert($variantsStyles, [1 => 'my/media/src/image.jpeg']);
 
-        $expected = 'background: var(--my-color-alias, radial-gradient( rgba(179, 60, 60, 1) 0%, rgba(255, 255, 255, 1) 100%)), url(my/media/src/image.jpeg);background-size: auto, cover;background-position: 0px 0px, 50% 50%;background-repeat: no-repeat, no-repeat;background-attachment: scroll, scroll;';
+        $expected = 'background: var(--color-my-color-alias, radial-gradient( rgba(179, 60, 60, 1) 0%, rgba(255, 255, 255, 1) 100%)), url(my/media/src/image.jpeg);background-size: auto, cover;background-position: 0px 0px, 50% 50%;background-repeat: no-repeat, no-repeat;background-attachment: scroll, scroll;';
         $this->assertEquals($expected, $css);
     }
 
@@ -331,7 +331,7 @@ class BackgroundStrategyTest extends TestCase
         $backgroundStrategy = new BackgroundStrategy();
         $css = $backgroundStrategy->convert($variantsStyles, [1 => 'my/media/src/image.jpeg', 'my-media.jpeg' => 'my/media/src/my-media.jpeg']);
 
-        $expected = 'background: var(--my-color-alias, radial-gradient( rgba(179, 60, 60, 1) 0%, rgba(255, 255, 255, 1) 100%)), url(my/media/src/my-media.jpeg);background-size: auto, cover;background-position: 0px 0px, 50% 50%;background-repeat: no-repeat, no-repeat;background-attachment: scroll, scroll;';
+        $expected = 'background: var(--color-my-color-alias, radial-gradient( rgba(179, 60, 60, 1) 0%, rgba(255, 255, 255, 1) 100%)), url(my/media/src/my-media.jpeg);background-size: auto, cover;background-position: 0px 0px, 50% 50%;background-repeat: no-repeat, no-repeat;background-attachment: scroll, scroll;';
         $this->assertEquals($expected, $css);
     }
 }

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace CssGenerator\StyleCollector;
 
-use CssGenerator\Decorators\StyleDecoratorInterface;
+use CssGenerator\Decorators\StyleInterface;
 
 interface StyleCollectorContract
 {
     /**
-     * @return \CssGenerator\Decorators\StyleDecoratorInterface
+     * @return \CssGenerator\Decorators\StyleInterface
      */
-    public function getStylesheet(): StyleDecoratorInterface;
+    public function getStylesheet(): StyleInterface;
 }

@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace CssGenerator\Decorators;
 
-use function implode;
-
 /**
  * Stylesheet contains breakpoints, and generates css.
  */
-class Stylesheet implements StyleDecoratorInterface
+class Stylesheet implements StylesheetInterface
 {
     /**
      * @var array<\CssGenerator\Decorators\BreakpointDecorator>
@@ -27,12 +25,20 @@ class Stylesheet implements StyleDecoratorInterface
     }
 
     /**
-     * Generate final css, based on breakpoints.
-     *
-     * @return string
+     * @return array
      */
-    public function __toString(): string
+    public function generate(): array
     {
-        return implode('', $this->breakpoints);
+        $result = [];
+
+        /**
+         * @var int                                          $breakpointId
+         * @var \CssGenerator\Decorators\BreakpointDecorator $breakpoint
+         */
+        foreach ($this->breakpoints as $breakpointId => $breakpoint) {
+            $result[$breakpointId] = (string)$breakpoint;
+        }
+
+        return $result;
     }
 }

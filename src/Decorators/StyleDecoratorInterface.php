@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CssGenerator\Decorators;
 
-interface StyleDecoratorInterface
+interface StyleDecoratorInterface extends StyleInterface
 {
     /**
      * @return string

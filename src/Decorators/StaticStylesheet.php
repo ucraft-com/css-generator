@@ -9,7 +9,7 @@ use function implode;
 /**
  * StaticStylesheet contains style without breakpoints, and generates css.
  */
-class StaticStylesheet implements StyleDecoratorInterface
+class StaticStylesheet implements StylesheetInterface
 {
     protected string $colorMediaQuery;
 
@@ -41,9 +41,9 @@ class StaticStylesheet implements StyleDecoratorInterface
     /**
      * Generate final css, for simple styles.
      *
-     * @return string
+     * @return array
      */
-    public function __toString(): string
+    public function generate(): array
     {
         $css = '';
 
@@ -57,6 +57,6 @@ class StaticStylesheet implements StyleDecoratorInterface
             $css .= '}';
         }
 
-        return $css;
+        return [$css];
     }
 }

@@ -9,6 +9,7 @@ use CssGenerator\Decorators\StaticStyleDecorator;
 use CssGenerator\Decorators\StaticStylesheet;
 use CssGenerator\Decorators\StyleDecorator;
 use CssGenerator\Decorators\StyleDecoratorInterface;
+use CssGenerator\Decorators\StyleInterface;
 use CssGenerator\Decorators\Stylesheet;
 
 use function array_unshift;
@@ -61,48 +62,18 @@ class StyleCollector implements StyleCollectorContract
      */
     public function assignBreakpoints(array $breakpoints): StyleCollector
     {
-        $defaultBreakpointWidth = 0;
-        $sortedBreakpoints = [];
-
-        // Sort breakpoints, if breakpoint is less than default, must be reverse sorted
-        // example: [320, 769, 1281, 1441, 1921] -> [1281, 769, 320, 1441, 1921] (1281 is default)
-        foreach ($breakpoints as $breakpointIndex => $breakpoint) {
+        foreach ($breakpoints as $breakpoint) {
             $newBreakpoint = new BreakpointDecorator();
-            $newBreakpoint->setIsDefault($breakpoint['default']);
-            $newBreakpoint->setId($breakpoint['id']);
-
-            if (!$newBreakpoint->isDefault()) {
-                if ($defaultBreakpointWidth === 0 || $defaultBreakpointWidth > $breakpoint['width']) {
-                    $width = $breakpoint['width'];
-
-                    if (isset($breakpoints[$breakpointIndex + 1])) {
-                        $width = $breakpoints[$breakpointIndex + 1]['width'] - 1;
-                    }
-                    $newBreakpoint->setMediaQuery("@media (max-width: {$width}px) {");
-                    array_unshift($sortedBreakpoints, $newBreakpoint);
-                } else {
-                    $newBreakpoint->setMediaQuery("@media (min-width: {$breakpoint['width']}px) {");
-                    $sortedBreakpoints[] = $newBreakpoint;
-                }
-            }
-
-            if ($breakpoint['default']) {
-                $defaultBreakpointWidth = $breakpoint['width'];
-                array_unshift($sortedBreakpoints, $newBreakpoint);
-            }
-        }
-
-        foreach ($sortedBreakpoints as $sortedBreakpoint) {
-            $this->data['breakpoints'][$sortedBreakpoint->getId()] = $sortedBreakpoint;
+            $this->data['breakpoints'][$breakpoint['id']] = $newBreakpoint;
         }
 
         return $this;
     }
 
     /**
-     * @return \CssGenerator\Decorators\StyleDecoratorInterface
+     * @return \CssGenerator\Decorators\StyleInterface
      */
-    public function getStylesheet(): StyleDecoratorInterface
+    public function getStylesheet(): StyleInterface
     {
         return $this->data['stylesheet'];
     }

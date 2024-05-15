@@ -14,75 +14,6 @@ class BreakpointDecorator implements StyleDecoratorInterface
     protected array $styles = [];
 
     /**
-     * @var bool
-     */
-    protected bool $isDefault = false;
-
-    /**
-     * @var string @media query of breakpoint
-     */
-    protected string $mediaQuery = '';
-
-    /**
-     * @var int ID of breakpoint.
-     */
-    protected int $id;
-
-    /**
-     * @param int $id
-     *
-     * @return void
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param string $mediaQuery
-     *
-     * @return void
-     */
-    public function setMediaQuery(string $mediaQuery): void
-    {
-        $this->mediaQuery = $mediaQuery;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMediaQuery(): string
-    {
-        return $this->mediaQuery;
-    }
-
-    /**
-     * @param bool $isDefault
-     *
-     * @return void
-     */
-    public function setIsDefault(bool $isDefault): void
-    {
-        $this->isDefault = $isDefault;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDefault(): bool
-    {
-        return $this->isDefault;
-    }
-
-    /**
      * @param string                                  $widgetId
      * @param \CssGenerator\Decorators\StyleDecorator $style
      *
@@ -101,16 +32,9 @@ class BreakpointDecorator implements StyleDecoratorInterface
     public function __toString(): string
     {
         $css = '';
-        if (!$this->isDefault) {
-            $css .= $this->getMediaQuery();
-        }
 
         foreach ($this->styles as $styles) {
             $css .= implode('', $styles);
-        }
-
-        if (!$this->isDefault) {
-            $css .= '}';
         }
 
         return $css;

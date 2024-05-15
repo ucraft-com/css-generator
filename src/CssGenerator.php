@@ -19,10 +19,10 @@ class CssGenerator
     /**
      * Convert variantsStyles to css string.
      *
-     * @return string
+     * @return array
      */
-    public function generate(): string
+    public function generate(): array
     {
-        return (string)$this->styleCollector->getStylesheet();
+        return $this->styleCollector->getStylesheet()->generate();
     }
 }
