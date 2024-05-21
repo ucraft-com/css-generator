@@ -19,6 +19,29 @@ class StaticStylesheet implements StylesheetInterface
     protected array $styles = [];
 
     /**
+     * @var int
+     */
+    protected int $breakpointId;
+
+    /**
+     * @param int $breakpointId
+     *
+     * @return void
+     */
+    public function setBreakpointId(int $breakpointId): void
+    {
+        $this->breakpointId = $breakpointId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBreakpointId(): int
+    {
+        return $this->breakpointId ?? 0;
+    }
+
+    /**
      * @param array $styles
      *
      * @return void
@@ -57,6 +80,6 @@ class StaticStylesheet implements StylesheetInterface
             $css .= '}';
         }
 
-        return [$css];
+        return [$this->getBreakpointId() => $css];
     }
 }

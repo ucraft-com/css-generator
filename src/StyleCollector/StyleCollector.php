@@ -103,6 +103,33 @@ class StyleCollector implements StyleCollectorContract
     }
 
     /**
+     * @param int $breakpointId
+     *
+     * @return void
+     */
+    public function buildWithBreakpointId(int $breakpointId): void {
+        $styles = [];
+
+        /**
+         * @var string $selector
+         * @var array  $variantsStyle
+         */
+        foreach ($this->data['variantsStyles'] as $variantsStyle) {
+            $style = new StaticStyleDecorator();
+            $style->setSelector($variantsStyle['selector']);
+            $style->setStyles($variantsStyle['styles']);
+            $styles[] = $style;
+        }
+
+        $stylesheet = new StaticStylesheet();
+        $stylesheet->setBreakpointId($breakpointId);
+        $stylesheet->setStyles($styles);
+        $stylesheet->setColorMedaQuery($this->data['colorMediaQuery']);
+        $this->data['stylesheet'] = $stylesheet;
+        $this->data['breakpoints'][$breakpointId] = new BreakpointDecorator();
+    }
+
+    /**
      * Convert data to Style data structures.
      *
      * @return void
