@@ -35,7 +35,7 @@ class StaticStylesheetTest extends TestCase
 
         $expected = 'h1 {font-size: 10px;padding-top: 5px;}h2 {margin-top: 6px;line-height: 7px;}';
 
-        $this->assertEquals($expected, (string)$staticStylesheet);
+        $this->assertEquals($expected, $staticStylesheet->generate()[0]);
     }
 
     public function testToString_WhenGivenStaticStylesAndColorQuery_ReturnsCssBlocksWrappedWithQuery(): void
@@ -64,6 +64,6 @@ class StaticStylesheetTest extends TestCase
 
         $expected = '@media (prefers-color-scheme: dark) {html[data-theme="dark"]:root {font-size: 10px;padding-top: 5px;}html[data-theme="light"]:root {margin-top: 6px;line-height: 7px;}}';
 
-        $this->assertEquals($expected, (string)$staticStylesheet);
+        $this->assertEquals($expected, $staticStylesheet->generate()[0]);
     }
 }

@@ -36,14 +36,14 @@ class CssGeneratorTest extends TestCase
             ->build();
 
         $generator = new CssGenerator($styleCollector);
-        $css = $generator->generate();
+        $css = $generator->generate()[0];
 
         $expected = 'p {text-transform: var(--text-text-transform);color: var(--text-color);}h1 {font-size: var(--h1-font-size);line-height: var(--h1-line-height);}';
 
         $this->assertEquals($expected, $css);
     }
 
-    public function testGenerate_WhenGivenSimpleStylesAndBackground_GenerateCOrrectBackgroundWithWebP(): void
+    public function testGenerate_WhenGivenSimpleStylesAndBackground_GenerateCorrectBackgroundWithWebP(): void
     {
         $breakpoints = [
             [
@@ -162,9 +162,10 @@ class CssGeneratorTest extends TestCase
         $generator = new CssGenerator($styleCollector);
         $css = $generator->generate();
 
-        $expected = '[data-widget-hash="random-hash"] {background: url(test.webp);background-size: cover;background-position: 50% 50%;background-repeat: no-repeat;background-attachment: scroll;}@media (max-width: 1280px) {}@media (max-width: 768px) {[data-widget-hash="random-hash"] {background: url(test.avif);background-size: cover;background-position: 50% 50%;background-repeat: no-repeat;background-attachment: scroll;}}@media (min-width: 1441px) {}@media (min-width: 1921px) {}';
-
-        $this->assertEquals($expected, $css);
+        $expectedBreakpoint1 = '[data-widget-hash="random-hash"] {background: url(test.avif);background-size: cover;background-position: 50% 50%;background-repeat: no-repeat;background-attachment: scroll;}';
+        $expectedBreakpoint3 = '[data-widget-hash="random-hash"] {background: url(test.webp);background-size: cover;background-position: 50% 50%;background-repeat: no-repeat;background-attachment: scroll;}';
+        $this->assertEquals($expectedBreakpoint1, $css[1]);
+        $this->assertEquals($expectedBreakpoint3, $css[3]);
     }
 
     public function testGenerate_WhenGivenWithBreakpoints_GeneratesBasedOnBreakpoints(): void
@@ -241,9 +242,58 @@ class CssGeneratorTest extends TestCase
         $generator = new CssGenerator($styleCollector);
         $css = $generator->generate();
 
-        $expected = '[data-widget-hash="random-hash"] {font-family: "Helvetica";}@media (max-width: 1280px) {}@media (max-width: 768px) {[data-widget-hash="random-hash"]:hover {color: rgb(0, 0, 0);}}@media (min-width: 1441px) {}@media (min-width: 1921px) {}';
+        $expectedBreakpoint1 = '[data-widget-hash="random-hash"]:hover {color: rgb(0, 0, 0);}';
+        $expectedBreakpoint3 = '[data-widget-hash="random-hash"] {font-family: "Helvetica";}';
+        $this->assertEquals($expectedBreakpoint1, $css[1]);
+        $this->assertEquals($expectedBreakpoint3, $css[3]);
+    }
 
-        $this->assertEquals($expected, $css);
+    public function testGenerateStyles_WithSpecifiedBreakpointId(): void
+    {
+        $staticGlobalStyles = [
+            [
+                'selector' => 'html',
+                'styles'   => [
+                    'height' => 'auto',
+                ],
+            ],
+            [
+                'selector' => 'html body',
+                'styles'   => [
+                    'background'          => 'var(--page-normal-background, #fff)',
+                    'background-size'     => 'var(--page-normal-background-size)',
+                    'background-repeat'   => 'var(--page-normal-background-repeat)',
+                    'background-position' => 'var(--page-normal-background-position)',
+                    'font-size'           => 'var(--base-font-size)',
+                    'font-family'         => 'var(--base-text-font-family)',
+                    'font-weight'         => 'var(--base-text-font-weight)',
+                    'position'            => 'relative',
+                    'height'              => 'auto',
+                ],
+            ],
+            [
+                'selector' => '::selection',
+                'styles'   => [
+                    'background-color' => 'var(--color-primitive-accent-100) !important',
+                ],
+            ],
+        ];
+
+        $styleCollector = $this->getStyleCollectorInstance();
+        $styleCollector
+            ->assignVariantsStyles($staticGlobalStyles)
+            ->buildWithBreakpointId(3);
+
+        $generator = new CssGenerator($styleCollector);
+        $css = $generator->generate();
+
+        $expected = 'html {height: auto;}html body {background: var(--page-normal-background, #fff);background-size: var(--page-normal-background-size);background-repeat: var(--page-normal-background-repeat);background-position: var(--page-normal-background-position);font-size: var(--base-font-size);font-family: var(--base-text-font-family);font-weight: var(--base-text-font-weight);position: relative;height: auto;}::selection {background-color: var(--color-primitive-accent-100) !important;}';
+
+        $this->assertEquals($expected, $css[3]);
+        $this->assertArrayHasKey(3, $css);
+        $this->assertArrayNotHasKey(0, $css);
+        $this->assertArrayNotHasKey(1, $css);
+        $this->assertArrayNotHasKey(2, $css);
     }
 
     protected function getStyleCollectorInstance(): StyleCollectorContract
