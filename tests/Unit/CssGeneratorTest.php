@@ -248,6 +248,54 @@ class CssGeneratorTest extends TestCase
         $this->assertEquals($expectedBreakpoint3, $css[3]);
     }
 
+    public function testGenerateStyles_WithSpecifiedBreakpointId(): void
+    {
+        $staticGlobalStyles = [
+            [
+                'selector' => 'html',
+                'styles'   => [
+                    'height' => 'auto',
+                ],
+            ],
+            [
+                'selector' => 'html body',
+                'styles'   => [
+                    'background'          => 'var(--page-normal-background, #fff)',
+                    'background-size'     => 'var(--page-normal-background-size)',
+                    'background-repeat'   => 'var(--page-normal-background-repeat)',
+                    'background-position' => 'var(--page-normal-background-position)',
+                    'font-size'           => 'var(--base-font-size)',
+                    'font-family'         => 'var(--base-text-font-family)',
+                    'font-weight'         => 'var(--base-text-font-weight)',
+                    'position'            => 'relative',
+                    'height'              => 'auto',
+                ],
+            ],
+            [
+                'selector' => '::selection',
+                'styles'   => [
+                    'background-color' => 'var(--color-primitive-accent-100) !important',
+                ],
+            ],
+        ];
+
+        $styleCollector = $this->getStyleCollectorInstance();
+        $styleCollector
+            ->assignVariantsStyles($staticGlobalStyles)
+            ->buildWithBreakpointId(3);
+
+        $generator = new CssGenerator($styleCollector);
+        $css = $generator->generate();
+
+        $expected = 'html {height: auto;}html body {background: var(--page-normal-background, #fff);background-size: var(--page-normal-background-size);background-repeat: var(--page-normal-background-repeat);background-position: var(--page-normal-background-position);font-size: var(--base-font-size);font-family: var(--base-text-font-family);font-weight: var(--base-text-font-weight);position: relative;height: auto;}::selection {background-color: var(--color-primitive-accent-100) !important;}';
+
+        $this->assertEquals($expected, $css[3]);
+        $this->assertArrayHasKey(3, $css);
+        $this->assertArrayNotHasKey(0, $css);
+        $this->assertArrayNotHasKey(1, $css);
+        $this->assertArrayNotHasKey(2, $css);
+    }
+
     protected function getStyleCollectorInstance(): StyleCollectorContract
     {
         return new StyleCollector();
