@@ -15,7 +15,7 @@ class FilterStrategy implements StrategyInterface
      */
     public function convert(array $variantStyle): string
     {
-        $property = 'filter:';
+        $property = '';
 
         foreach ($variantStyle['value'] as $value) {
             $filterType = $value['type'];
@@ -29,6 +29,6 @@ class FilterStrategy implements StrategyInterface
             $property .= " $filterType($filterValue)";
         }
 
-        return $property.';';
+        return !empty($property) ? 'filter:'.$property.';' : '';
     }
 }
