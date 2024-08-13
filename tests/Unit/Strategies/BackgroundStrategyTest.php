@@ -25,7 +25,7 @@ class BackgroundStrategyTest extends TestCase
         $backgroundStrategy = new BackgroundStrategy();
         $css = $backgroundStrategy->convert($variantsStyles);
 
-        $expected = 'background: linear-gradient(rgba(253, 247, 237, 1), rgba(253, 247, 237, 1));background-size: auto;background-position: 0px 0px;background-repeat: no-repeat;background-attachment: scroll;';
+        $expected = 'background: rgba(253, 247, 237, 1);';
         $this->assertEquals($expected, $css);
     }
 
@@ -45,7 +45,7 @@ class BackgroundStrategyTest extends TestCase
         $backgroundStrategy = new BackgroundStrategy();
         $css = $backgroundStrategy->convert($variantsStyles);
 
-        $expected = 'background: none;';
+        $expected = '';
         $this->assertEquals($expected, $css);
     }
 

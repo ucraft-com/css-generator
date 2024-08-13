@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CssGenerator\Strategies;
 
 use function join;
+use function is_string;
 
 class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
 {
@@ -35,6 +36,10 @@ class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
                 continue;
             }
 
+            if ($variantStyleValue['type'] === 'solid' && (is_string($variantStyleValue['value']) || empty($variantStyleValue['value'][1]))) {
+                return 'background: '.$variantStyleValue['value'].';';
+            }
+
             $color = $this->parseValue($variantStyleValue['type'], $variantStyleValue['value'], $mediaMapping);
 
             $data = $variantStyleValue['type'] === 'image' ? $variantStyleValue['value']['data'] : $this->defaultBackgroundProps;
@@ -48,7 +53,7 @@ class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
         }
 
         if (empty($styles)) {
-            return 'background: none;';
+            return '';
         }
 
         return join('', [

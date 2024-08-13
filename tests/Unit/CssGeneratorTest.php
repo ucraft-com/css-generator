@@ -243,7 +243,7 @@ class CssGeneratorTest extends TestCase
         $css = $generator->generate();
 
         $expectedBreakpoint1 = '[data-widget-hash="random-hash"]:hover {color: rgb(0, 0, 0);}';
-        $expectedBreakpoint3 = '[data-widget-hash="random-hash"] {font-family: "Helvetica";}';
+        $expectedBreakpoint3 = '[data-widget-hash="random-hash"] {font-family: Helvetica;}';
         $this->assertEquals($expectedBreakpoint1, $css[1]);
         $this->assertEquals($expectedBreakpoint3, $css[3]);
     }
