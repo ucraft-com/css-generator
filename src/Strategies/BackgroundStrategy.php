@@ -36,7 +36,7 @@ class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
                 continue;
             }
 
-            if ($variantStyleValue['type'] === 'solid' && (is_string($variantStyleValue['value']) || empty($variantStyleValue['value'][1]))) {
+            if ($variantStyleValue['type'] === 'solid' && empty($variantStyle['value'][1])) {
                 return 'background: '.$variantStyleValue['value'].';';
             }
 
