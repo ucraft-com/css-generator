@@ -8,11 +8,9 @@ use CssGenerator\Decorators\BreakpointDecorator;
 use CssGenerator\Decorators\StaticStyleDecorator;
 use CssGenerator\Decorators\StaticStylesheet;
 use CssGenerator\Decorators\StyleDecorator;
-use CssGenerator\Decorators\StyleDecoratorInterface;
 use CssGenerator\Decorators\StyleInterface;
 use CssGenerator\Decorators\Stylesheet;
 
-use function array_unshift;
 use function in_array;
 
 /**
