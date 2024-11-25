@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace CssGenerator\Strategies;
 
 use function join;
-use function is_string;
 
 class BackgroundStrategy implements StrategyInterfaceWithMediaMapping
 {

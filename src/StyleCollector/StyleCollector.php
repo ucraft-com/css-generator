@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CssGenerator\StyleCollector;
 
 use CssGenerator\Decorators\BreakpointDecorator;
+use CssGenerator\Decorators\BreakpointMediaQueryDecorator;
 use CssGenerator\Decorators\StaticStyleDecorator;
 use CssGenerator\Decorators\StaticStylesheet;
 use CssGenerator\Decorators\StyleDecorator;
@@ -12,6 +13,7 @@ use CssGenerator\Decorators\StyleInterface;
 use CssGenerator\Decorators\Stylesheet;
 
 use function in_array;
+use function array_unshift;
 
 /**
  * StyleCollector collects all necessary data for generating css.
@@ -63,6 +65,51 @@ class StyleCollector implements StyleCollectorContract
         foreach ($breakpoints as $breakpoint) {
             $newBreakpoint = new BreakpointDecorator();
             $this->data['breakpoints'][$breakpoint['id']] = $newBreakpoint;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array $breakpoints
+     *
+     * @return $this
+     */
+    public function assignMediaQueryBreakpoints(array $breakpoints): StyleCollector
+    {
+        $defaultBreakpointWidth = 0;
+        $sortedBreakpoints = [];
+
+        // Sort breakpoints, if breakpoint is less than default, must be reverse sorted
+        // example: [320, 769, 1281, 1441, 1921] -> [1281, 769, 320, 1441, 1921] (1281 is default)
+        foreach ($breakpoints as $breakpointIndex => $breakpoint) {
+            $newBreakpoint = new BreakpointMediaQueryDecorator();
+            $newBreakpoint->setIsDefault($breakpoint['default']);
+            $newBreakpoint->setId($breakpoint['id']);
+
+            if (!$newBreakpoint->isDefault()) {
+                if ($defaultBreakpointWidth === 0 || $defaultBreakpointWidth > $breakpoint['width']) {
+                    $width = $breakpoint['width'];
+
+                    if (isset($breakpoints[$breakpointIndex + 1])) {
+                        $width = $breakpoints[$breakpointIndex + 1]['width'] - 1;
+                    }
+                    $newBreakpoint->setMediaQuery("@media (max-width: {$width}px) {");
+                    array_unshift($sortedBreakpoints, $newBreakpoint);
+                } else {
+                    $newBreakpoint->setMediaQuery("@media (min-width: {$breakpoint['width']}px) {");
+                    $sortedBreakpoints[] = $newBreakpoint;
+                }
+            }
+
+            if ($breakpoint['default']) {
+                $defaultBreakpointWidth = $breakpoint['width'];
+                array_unshift($sortedBreakpoints, $newBreakpoint);
+            }
+        }
+
+        foreach ($sortedBreakpoints as $sortedBreakpoint) {
+            $this->data['breakpoints'][$sortedBreakpoint->getId()] = $sortedBreakpoint;
         }
 
         return $this;
