@@ -6,6 +6,8 @@ namespace CssGenerator;
 
 use CssGenerator\StyleCollector\StyleCollectorContract;
 
+use function join;
+
 /**
  * CssGenerator converts variantsStyles array into css string.
  */
@@ -17,12 +19,22 @@ class CssGenerator
     }
 
     /**
-     * Convert variantsStyles to css string.
+     * Convert variantsStyles to array of css string key by breakpoint id.
      *
      * @return array
      */
     public function generate(): array
     {
         return $this->styleCollector->getStylesheet()->generate();
+    }
+
+    /**
+     * Convert variantsStyles to css string.
+     *
+     * @return string
+     */
+    public function generateStylesheet(): string
+    {
+        return join($this->styleCollector->getStylesheet()->generate());
     }
 }
